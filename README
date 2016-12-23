@@ -1,0 +1,18 @@
+Help the blind see, using tensorflow. 
+
+Done : 
+	Simple integration of tensorflow into an ios app.
+	Use Nuance api to speak to user
+	Design very simple and stupid UI
+
+To Do:
+	Remove dependence on Nuance. Use Apple or roll my own
+	Transfer learn the network on more relevant objects.
+		Currently the model is trained on image net and it is not relevant enough for home usage.
+	Add Face detection and remember feature
+	Add Emotion detection feature
+	Add trafic sign detection feature
+	
+Reach : 	
+	Add image to speech conversion feature, so that the blind can read a newspaper. 		
+
