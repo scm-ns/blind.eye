@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "tf_ex-Swift.h"
 
 @interface AppDelegate ()
 
@@ -17,6 +18,15 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    _window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    [_window makeKeyAndVisible];
+    UICollectionViewFlowLayout * layout = [[UICollectionViewFlowLayout alloc]init];
+
+    _window.rootViewController = [[UINavigationController alloc] initWithRootViewController: [[MainView alloc]initWithCollectionViewLayout:layout]];
+    
+    
     return YES;
 }
 
