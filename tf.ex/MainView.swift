@@ -18,7 +18,8 @@ class MainView: UICollectionViewController , SKTransactionDelegate
     var session: SKSession? = nil
     
 
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
         
         let SKSServerUrl = "nmsps://NMDPTRIAL_scm197_3_rutgers_edu20161119180532@sslsandbox-nmdp.nuancemobility.net:443";

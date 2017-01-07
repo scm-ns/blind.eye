@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "361F99801DDFDB3D00EEAD20"
-               BuildableName = "tf.ex.app"
+               BuildableName = "blind.eye.app"
                BlueprintName = "blind.eye"
                ReferencedContainer = "container:blind.eye.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "361F99801DDFDB3D00EEAD20"
-            BuildableName = "tf.ex.app"
+            BuildableName = "blind.eye.app"
             BlueprintName = "blind.eye"
             ReferencedContainer = "container:blind.eye.xcodeproj">
          </BuildableReference>
@@ -56,7 +56,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "361F99801DDFDB3D00EEAD20"
-            BuildableName = "tf.ex.app"
+            BuildableName = "blind.eye.app"
             BlueprintName = "blind.eye"
             ReferencedContainer = "container:blind.eye.xcodeproj">
          </BuildableReference>
@@ -75,7 +75,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "361F99801DDFDB3D00EEAD20"
-            BuildableName = "tf.ex.app"
+            BuildableName = "blind.eye.app"
             BlueprintName = "blind.eye"
             ReferencedContainer = "container:blind.eye.xcodeproj">
          </BuildableReference>
