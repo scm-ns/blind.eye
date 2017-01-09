@@ -10,8 +10,6 @@
 		360C1B251DE12B5C0028BFA7 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 360C1B241DE12B5C0028BFA7 /* QuartzCore.framework */; };
 		360C1B271DE12B620028BFA7 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 360C1B261DE12B620028BFA7 /* ImageIO.framework */; };
 		360C1B291DE12B900028BFA7 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 360C1B281DE12B900028BFA7 /* CoreMedia.framework */; };
-		361273271DE0C101002790DE /* imagenet_comp_graph_label_strings.txt in Resources */ = {isa = PBXBuildFile; fileRef = 361273251DE0C101002790DE /* imagenet_comp_graph_label_strings.txt */; };
-		361273281DE0C101002790DE /* tensorflow_inception_graph.pb in Resources */ = {isa = PBXBuildFile; fileRef = 361273261DE0C101002790DE /* tensorflow_inception_graph.pb */; };
 		361F99861DDFDB3D00EEAD20 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 361F99851DDFDB3D00EEAD20 /* main.m */; };
 		361F99891DDFDB3D00EEAD20 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 361F99881DDFDB3D00EEAD20 /* AppDelegate.m */; };
 		361F99911DDFDB3D00EEAD20 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 361F99901DDFDB3D00EEAD20 /* Assets.xcassets */; };
@@ -22,6 +20,7 @@
 		361F99A41DDFEE9800EEAD20 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 361F99A31DDFEE9800EEAD20 /* libc++.tbd */; };
 		361F99AC1DE0E81600EEAD20 /* PredictionDataSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 361F99AB1DE0E81600EEAD20 /* PredictionDataSource.mm */; };
 		361F99AE1DE0E81600EEAD20 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 361F99AD1DE0E81600EEAD20 /* AVFoundation.framework */; };
+		36A348B31E243A250062E21D /* imagenet_comp_graph_label_strings.txt in Resources */ = {isa = PBXBuildFile; fileRef = 36A348B21E243A250062E21D /* imagenet_comp_graph_label_strings.txt */; };
 		36F8203D1DE0A991005DEC05 /* tensorflow_utils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 36F8203C1DE0A991005DEC05 /* tensorflow_utils.mm */; };
 		36F820431DE0B397005DEC05 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F820421DE0B397005DEC05 /* MainView.swift */; };
 /* End PBXBuildFile section */
@@ -30,8 +29,6 @@
 		360C1B241DE12B5C0028BFA7 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		360C1B261DE12B620028BFA7 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		360C1B281DE12B900028BFA7 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
-		361273251DE0C101002790DE /* imagenet_comp_graph_label_strings.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = imagenet_comp_graph_label_strings.txt; path = ../../../deep_learning/tf/tensorflow/tensorflow/contrib/ios_examples/camera/data/imagenet_comp_graph_label_strings.txt; sourceTree = "<group>"; };
-		361273261DE0C101002790DE /* tensorflow_inception_graph.pb */ = {isa = PBXFileReference; lastKnownFileType = file; name = tensorflow_inception_graph.pb; path = ../../../deep_learning/tf/tensorflow/tensorflow/contrib/ios_examples/camera/data/tensorflow_inception_graph.pb; sourceTree = "<group>"; };
 		361F99811DDFDB3D00EEAD20 /* blind.eye.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = blind.eye.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		361F99851DDFDB3D00EEAD20 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		361F99871DDFDB3D00EEAD20 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -46,6 +43,8 @@
 		361F99AA1DE0E81600EEAD20 /* PredictionDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PredictionDataSource.h; sourceTree = "<group>"; };
 		361F99AB1DE0E81600EEAD20 /* PredictionDataSource.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PredictionDataSource.mm; sourceTree = "<group>"; };
 		361F99AD1DE0E81600EEAD20 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		36A348B11E243A200062E21D /* tensorflow_inception_graph.pb */ = {isa = PBXFileReference; lastKnownFileType = file; path = tensorflow_inception_graph.pb; sourceTree = "<group>"; };
+		36A348B21E243A250062E21D /* imagenet_comp_graph_label_strings.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = imagenet_comp_graph_label_strings.txt; sourceTree = "<group>"; };
 		36F8203B1DE0A991005DEC05 /* tensorflow_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tensorflow_utils.h; sourceTree = "<group>"; };
 		36F8203C1DE0A991005DEC05 /* tensorflow_utils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = tensorflow_utils.mm; sourceTree = "<group>"; };
 		36F8203F1DE0AE7E005DEC05 /* tf.ex-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "tf.ex-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -92,8 +91,6 @@
 		361F99831DDFDB3D00EEAD20 /* tf.ex */ = {
 			isa = PBXGroup;
 			children = (
-				361273251DE0C101002790DE /* imagenet_comp_graph_label_strings.txt */,
-				361273261DE0C101002790DE /* tensorflow_inception_graph.pb */,
 				361F99871DDFDB3D00EEAD20 /* AppDelegate.h */,
 				361F99881DDFDB3D00EEAD20 /* AppDelegate.m */,
 				36F820421DE0B397005DEC05 /* MainView.swift */,
@@ -102,7 +99,6 @@
 				361F99901DDFDB3D00EEAD20 /* Assets.xcassets */,
 				361F99951DDFDB3D00EEAD20 /* Info.plist */,
 				361F99841DDFDB3D00EEAD20 /* Supporting Files */,
-				36F8203F1DE0AE7E005DEC05 /* tf.ex-Bridging-Header.h */,
 			);
 			path = tf.ex;
 			sourceTree = "<group>";
@@ -110,8 +106,11 @@
 		361F99841DDFDB3D00EEAD20 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				36F8203F1DE0AE7E005DEC05 /* tf.ex-Bridging-Header.h */,
 				36F8203B1DE0A991005DEC05 /* tensorflow_utils.h */,
+				36A348B21E243A250062E21D /* imagenet_comp_graph_label_strings.txt */,
 				36F8203C1DE0A991005DEC05 /* tensorflow_utils.mm */,
+				36A348B11E243A200062E21D /* tensorflow_inception_graph.pb */,
 				361F99851DDFDB3D00EEAD20 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -192,8 +191,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				361273271DE0C101002790DE /* imagenet_comp_graph_label_strings.txt in Resources */,
-				361273281DE0C101002790DE /* tensorflow_inception_graph.pb in Resources */,
+				36A348B31E243A250062E21D /* imagenet_comp_graph_label_strings.txt in Resources */,
 				361F99911DDFDB3D00EEAD20 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -312,7 +310,6 @@
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/tf.ex/Carthage/Build/iOS",
 					"$(PROJECT_DIR)",
 				);
 				HEADER_SEARCH_PATHS = (
@@ -357,7 +354,6 @@
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/tf.ex/Carthage/Build/iOS",
 					"$(PROJECT_DIR)",
 				);
 				HEADER_SEARCH_PATHS = (
