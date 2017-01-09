@@ -22,7 +22,6 @@
 		361F99A41DDFEE9800EEAD20 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 361F99A31DDFEE9800EEAD20 /* libc++.tbd */; };
 		361F99AC1DE0E81600EEAD20 /* PredictionDataSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 361F99AB1DE0E81600EEAD20 /* PredictionDataSource.mm */; };
 		361F99AE1DE0E81600EEAD20 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 361F99AD1DE0E81600EEAD20 /* AVFoundation.framework */; };
-		36C215851DE0EC0100B35B32 /* SpeechKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36C215841DE0EC0100B35B32 /* SpeechKit.framework */; };
 		36F8203D1DE0A991005DEC05 /* tensorflow_utils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 36F8203C1DE0A991005DEC05 /* tensorflow_utils.mm */; };
 		36F820431DE0B397005DEC05 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F820421DE0B397005DEC05 /* MainView.swift */; };
 /* End PBXBuildFile section */
@@ -47,7 +46,6 @@
 		361F99AA1DE0E81600EEAD20 /* PredictionDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PredictionDataSource.h; sourceTree = "<group>"; };
 		361F99AB1DE0E81600EEAD20 /* PredictionDataSource.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PredictionDataSource.mm; sourceTree = "<group>"; };
 		361F99AD1DE0E81600EEAD20 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		36C215841DE0EC0100B35B32 /* SpeechKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SpeechKit.framework; sourceTree = "<group>"; };
 		36F8203B1DE0A991005DEC05 /* tensorflow_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tensorflow_utils.h; sourceTree = "<group>"; };
 		36F8203C1DE0A991005DEC05 /* tensorflow_utils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = tensorflow_utils.mm; sourceTree = "<group>"; };
 		36F8203F1DE0AE7E005DEC05 /* tf.ex-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "tf.ex-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -60,7 +58,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				360C1B291DE12B900028BFA7 /* CoreMedia.framework in Frameworks */,
-				36C215851DE0EC0100B35B32 /* SpeechKit.framework in Frameworks */,
 				360C1B271DE12B620028BFA7 /* ImageIO.framework in Frameworks */,
 				360C1B251DE12B5C0028BFA7 /* QuartzCore.framework in Frameworks */,
 				361F99AE1DE0E81600EEAD20 /* AVFoundation.framework in Frameworks */,
@@ -123,7 +120,6 @@
 		36F8203E1DE0A9A5005DEC05 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				36C215841DE0EC0100B35B32 /* SpeechKit.framework */,
 				360C1B281DE12B900028BFA7 /* CoreMedia.framework */,
 				360C1B261DE12B620028BFA7 /* ImageIO.framework */,
 				360C1B241DE12B5C0028BFA7 /* QuartzCore.framework */,

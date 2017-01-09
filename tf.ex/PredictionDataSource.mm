@@ -8,26 +8,22 @@
 
 #import "PredictionDataSource.h"
 
-							
-
-
-#include "tensorflow_utils.h"
-
 
 #include <sys/time.h>
 
 #import <memory>
+
+// tensorflow dependencies
+#include "tensorflow_utils.h"
 #include "tensorflow/core/public/session.h"
 #include "tensorflow/core/util/memmapped_file_system.h"
 
+// Based on Google's Code
 
-//#include "tensorflow_utils.h"
-
-// Copy of google's code
-// If you have your own model, modify this to the file name, and make sure
-// you've added the file to your app resources too.
+// Model details
 static NSString* model_file_name = @"tensorflow_inception_graph";
 static NSString* model_file_type = @"pb";
+
 // This controls whether we'll be loading a plain GraphDef proto, or a
 // file created by the convert_graphdef_memmapped_format utility that wraps a
 // GraphDef and parameter file that can be mapped into memory from file to
@@ -49,8 +45,6 @@ const std::string output_layer_name = "softmax1";
 @interface PredictionDataSource(internalMethods)
 -(void)setupAVCapture;
 -(void)tearDownAVCapture;
-
-
 @end
 
 @implementation PredictionDataSource
@@ -67,11 +61,12 @@ std::vector<std::string> labels;
     NSLog(@"Entering block");
     dispatch_group_enter(processImageGroup);
     dispatch_group_notify(processImageGroup ,
-                          dispatch_get_main_queue(),
-                          ^{
-                              block(); // in the block , access the array from the data source
-                          });
-    
+                          
+      dispatch_get_main_queue(),
+      ^{
+          block(); // in the block , access the array from the data source
+      });
+
 }
 
 -(void)setupAVCapture
@@ -89,6 +84,7 @@ std::vector<std::string> labels;
     [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     AVCaptureDeviceInput *deviceInput =
     [AVCaptureDeviceInput deviceInputWithDevice:device error:&error];
+
     assert(error == nil);
     
     if ([session canAddInput:deviceInput]) [session addInput:deviceInput];
@@ -136,38 +132,29 @@ std::vector<std::string> labels;
 
 }
 
-// Setup Buffer
-/*
+/**
     We do not want each image that is output from the video to be analyzed. 
     We only want to do this , when a timer goes off and the data source is said to analyze the scene
- */
 
+ @param captureOutput <#captureOutput description#>
+ @param sampleBuffer <#sampleBuffer description#>
+ @param connection <#connection description#>
+ */
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
     // the buffering is done within the image process queue
     // so now enter the group
 
+    
     if(analyzeCurrentFrame)
     {
 
         analyzeCurrentFrame = false;
     
-    
-
-    
         CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer); // get the image from the buffer
-        //[self ibmPOSTRequestWithImage: pixelBuffer];
-
         
 
         [self runCNNOnFrame:pixelBuffer]; // run the cnn created from the graph
-        
-        
-       
-      
-        
-        // covert to ciimage then to jpeg , send to ibm watson ..
-        // How to handle the threading here ? .. Create two seperate ques or dispatch into high priority ones
         
         
     }
@@ -400,6 +387,12 @@ std::vector<std::string> labels;
 
 
 
+/**
+    TO DO : 
+        Try to use the IBM Watson servers to get the prediction
+
+ @param img The pixel buffer to be used for the recognition
+ */
 -(void)ibmPOSTRequestWithImage:(CVPixelBufferRef)img
 {
     // convert CIimage to png

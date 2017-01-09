@@ -7,28 +7,22 @@
 //
 
 import UIKit
+import AVFoundation
 
-private let reuseIdentifier = "Cell"
-
-class MainView: UICollectionViewController , SKTransactionDelegate
+class MainView: UICollectionViewController
 {
 
-    var ds : PredictionDataSource? ;
-    var analyzeImageTimer : Timer? ;
-    var session: SKSession? = nil
+    var ds : PredictionDataSource? 
+    var analyzeImageTimer : Timer?
     
+    let synth = AVSpeechSynthesizer()
+
+    private let reuseIdentifier = "Cell"
 
     override func viewDidLoad()
     {
         super.viewDidLoad()
         
-        let SKSServerUrl = "nmsps://NMDPTRIAL_scm197_3_rutgers_edu20161119180532@sslsandbox-nmdp.nuancemobility.net:443";
-        let SKSAppKey = "1f8818c1115fbb9d5f627c9bb84263d725ce4f78684f54a197eaa17e664abc86d2d447e33302819364fd2e1c4091f3655f43ddc7923168291c09a78253630826"
-        
-        session = SKSession(url: NSURL(string: SKSServerUrl) as URL!, appToken: SKSAppKey)
-        
-        
-        speak(str: "Hello World");
         
         ds  = PredictionDataSource.init() // Load the data source 
 
@@ -53,24 +47,7 @@ class MainView: UICollectionViewController , SKTransactionDelegate
         })
     }
     
-    
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
-
-    // MARK: UICollectionViewDataSource
+   // MARK: UICollectionViewDataSource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         // #warning Incomplete implementation, return the number of sections
@@ -112,13 +89,13 @@ class MainView: UICollectionViewController , SKTransactionDelegate
     func speak(str : String)
     {
 
-        let textToSpeak = str;
+        // Create utterance object with text and pass it to the synthesizer
+        let utterance = AVSpeechUtterance(string: str)
         
-        // use this to specify a voice (language will be determined based on the voice)
-
-        _ = session?.speak(textToSpeak, withVoice: "Samantha", options: nil, delegate: self)
-     //   _ = session?.speakMarkup("<speak><prosody rate=\"50%\">\(textToSpeak)</prosody></speak>", withVoice: "Samantha", options: nil, delegate: self);
-        
+        // Set rate and language
+        utterance.rate = 0.3
+        utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+        self.synth.speak(utterance)
         
     }
     

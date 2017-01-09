@@ -12,14 +12,12 @@
 
 
 // We do not need a video data output. We only need the prediction.
-/*
- 
+/**
     Also the prediction does not have to be done on every image.
     It can be done every 0.5 ms.
     I should update the datasource so that, every 0.5ms the current frame is used to do the 
     predictoin and this is displayed in the collectoin view
  */
-
 @interface PredictionDataSource : NSObject <AVCaptureVideoDataOutputSampleBufferDelegate>
 {
     // To manage the camera interface

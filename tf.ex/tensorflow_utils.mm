@@ -69,8 +69,8 @@ void GetTopN(const Eigen::TensorMap<Eigen::Tensor<float, 1, Eigen::RowMajor>,
                       std::greater<std::pair<float, int> > >
       top_result_pq;
 
-  const int count = prediction.size();
-  for (int i = 0; i < count; ++i) {
+  const long count = prediction.size();
+  for (long i = 0; i < count; ++i) {
     const float value = prediction(i);
 
     // Only add it if it beats the threshold and has a chance at being in
