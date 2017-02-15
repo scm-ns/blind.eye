@@ -29,9 +29,15 @@ static NSString* model_file_type = @"pb";
 // GraphDef and parameter file that can be mapped into memory from file to
 // reduce overall memory usage.
 const bool model_uses_memory_mapping = false;
+
+//<+> This is where I will have to make changes so that I can read in multiple graphs.
+
+
+
 // If you have your own model, point this to the labels file.
 static NSString* labels_file_name = @"imagenet_comp_graph_label_strings";
 static NSString* labels_file_type = @"txt";
+
 // These dimensions need to match those the model was trained with.
 const int wanted_input_width = 224;
 const int wanted_input_height = 224;
@@ -54,20 +60,20 @@ std::unique_ptr<tensorflow::Session> tf_session;
 std::unique_ptr<tensorflow::MemmappedEnv> tf_memmapped_env;
 std::vector<std::string> labels;
 
--(void) analyzeWithCom:(void (^)(void))block
-{
-    // Now analyze the image in front of us
-    analyzeCurrentFrame = true;
-    NSLog(@"Entering block");
-    dispatch_group_enter(processImageGroup);
-    dispatch_group_notify(processImageGroup ,
-                          
-      dispatch_get_main_queue(),
-      ^{
-          block(); // in the block , access the array from the data source
-      });
 
+// Init loads the graphs and then sets up the avcapture
+-(id)init
+{
+    if ( self = [super init] )
+    {
+        [self setup];
+        
+        // <+>Serial queue, this is limiting. Why a serial queue ?
+        processImageQueue = dispatch_queue_create("VideoDataOutputQueue", DISPATCH_QUEUE_SERIAL);
+    }
+    return self;
 }
+
 
 -(void)setupAVCapture
 {
@@ -82,12 +88,14 @@ std::vector<std::string> labels;
     
     AVCaptureDevice *device =
     [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    
     AVCaptureDeviceInput *deviceInput =
     [AVCaptureDeviceInput deviceInputWithDevice:device error:&error];
 
     assert(error == nil);
     
-    if ([session canAddInput:deviceInput]) [session addInput:deviceInput];
+    if ([session canAddInput:deviceInput])
+        [session addInput:deviceInput];
     
     
     // will ibm need the still image ? See if the video buffer can be converted into jpeg
@@ -103,18 +111,22 @@ std::vector<std::string> labels;
     
     [videoDataOutput setVideoSettings:rgbOutputSettings]; // May be does the required convertions
     [videoDataOutput setAlwaysDiscardsLateVideoFrames:YES];
-    processImageQueue = dispatch_queue_create("VideoDataOutputQueue", DISPATCH_QUEUE_SERIAL);
  
     // set up buffering
-    [videoDataOutput setSampleBufferDelegate:self queue:processImageQueue]; // The video data is put into a buffer and the class accepts them
+    [videoDataOutput setSampleBufferDelegate:self queue:processImageQueue];
+    // The video data is put into a buffer and the class accepts them
+    // Now, something else is acting as the queue for actual storage, this queue here refers to a unint of work. 
     
-    if ([session canAddOutput:videoDataOutput]) [session addOutput:videoDataOutput];
+    // <+>
+    // The video is fed out of the camera in sort of graph manner, where the ends of the graph and given to
+    // appropriate sinks based on the type and the conversion is done by apple ?
+    
+    if ([session canAddOutput:videoDataOutput])
+        [session addOutput:videoDataOutput];
+    
     [[videoDataOutput connectionWithMediaType:AVMediaTypeVideo] setEnabled:YES];
     
-    
-    [session startRunning];// shoul sessoin be released ? 
-    
-   
+    [session startRunning];
     
     if(error)
     {
@@ -129,6 +141,25 @@ std::vector<std::string> labels;
         [alertView show];
     }
      
+
+}
+
+
+-(void) analyzeWithCom:(void (^)(void))block
+{
+    // Now analyze the image in front of us
+    analyzeCurrentFrame = true;
+    //NSLog(@"Entering block");
+    dispatch_group_enter(processImageGroup);
+   
+    // processImag is a serial queue, so this block gets executed at the end ?
+    // but why is it a seiral quue ?
+    dispatch_group_notify(processImageGroup ,
+                          
+      dispatch_get_main_queue(),
+      ^{
+          block(); // in the block , access the array from the data source
+      });
 
 }
 
@@ -183,11 +214,12 @@ std::vector<std::string> labels;
         assert(false);  // Unknown source format
     }
     
-    const int sourceRowBytes = (int)CVPixelBufferGetBytesPerRow(pixelBuffer);
-    const int image_width = (int)CVPixelBufferGetWidth(pixelBuffer);
-    const int fullHeight = (int)CVPixelBufferGetHeight(pixelBuffer);
+    const int sourceRowBytes = (int)CVPixelBufferGetBytesPerRow(pixelBuffer); // martixRowSize
+    const int image_width = (int)CVPixelBufferGetWidth(pixelBuffer); // matrixNumCols
+    const int fullHeight = (int)CVPixelBufferGetHeight(pixelBuffer); // matrixNumRows
     
-    CVPixelBufferLockBaseAddress(pixelBuffer, 0); // move the data to the cpu. else it will be in the gpu and we cannot do the requried opeations on it
+    // move the data to the cpu. else it will be in the gpu and we cannot do the requried opeations on it
+    CVPixelBufferLockBaseAddress(pixelBuffer, 0);
     unsigned char *sourceBaseAddr = (unsigned char *)(CVPixelBufferGetBaseAddress(pixelBuffer)); // get base address of the pixel buffer
     
     int image_height;
@@ -291,101 +323,7 @@ std::vector<std::string> labels;
         }
     }
 
-    oldPredictionValues = decayedPredictionValues;
-    
-    for (NSString *label in newValues)
-    {
-        NSNumber *newPredictionValueObject = [newValues objectForKey:label];
-        NSNumber *oldPredictionValueObject = [oldPredictionValues objectForKey:label];
-        if (!oldPredictionValueObject)
-        {
-            oldPredictionValueObject = [NSNumber numberWithFloat:0.0f];
-        }
-        
-        const float newPredictionValue = [newPredictionValueObject floatValue];
-        const float oldPredictionValue = [oldPredictionValueObject floatValue];
-        const float updatedPredictionValue = (oldPredictionValue + (newPredictionValue * updateValue)); // combine the old and new pred values
-        
-        NSNumber *updatedPredictionValueObject = [NSNumber numberWithFloat:updatedPredictionValue];
-        [oldPredictionValues setObject:updatedPredictionValueObject forKey:label];
-    }
-    // now the old pred val has both the pred and the new labels. With their probabilities adjusted properly
-    
-    NSArray *candidateLabels = [NSMutableArray array];
-    for (NSString *label in oldPredictionValues)
-    {
-        NSNumber *oldPredictionValueObject = [oldPredictionValues objectForKey:label];
-        const float oldPredictionValue = [oldPredictionValueObject floatValue];
-        if (oldPredictionValue > 0.05f) // Check if the prediction is actually probable.
-        {
-            NSDictionary *entry = @
-            {
-                @"label" : label,
-                @"value" : oldPredictionValueObject
-            };
-            candidateLabels = [candidateLabels arrayByAddingObject:entry];
-        }
-    }
-    // Sort the labels in descending order
-    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"value" ascending:NO];
-    NSArray *sortedLabels = [candidateLabels sortedArrayUsingDescriptors:[NSArray arrayWithObject:sort]];
-    
-    // the sortedLabels are the results that we will show in the collection view .. So Now the group has stopped
-    self.classes = sortedLabels;
-    
-    
-    // the processing done in the process image is completed, hence we leave the group
-        NSLog(@"Leave block");
-    dispatch_group_leave(processImageGroup);
 }
-
-
-
-- (void)setup
-{
-    // Form the group
-    processImageGroup =  dispatch_group_create();
-    
-    labelLayers = [[NSMutableArray alloc] init];
-    oldPredictionValues = [[NSMutableDictionary alloc] init];
-    
-    
-    
-    
-    tensorflow::Status load_status;
-    if (model_uses_memory_mapping)
-    {
-        load_status = LoadMemoryMappedModel(
-                                            model_file_name, model_file_type, &tf_session, &tf_memmapped_env);
-    }
-    else
-    {
-        load_status = LoadModel(model_file_name, model_file_type, &tf_session);
-    }
-    
-    if (!load_status.ok()) {
-        LOG(FATAL) << "Couldn't load model: " << load_status;
-    }
-    
-    tensorflow::Status labels_status =
-    LoadLabels(labels_file_name, labels_file_type, &labels);
-    if (!labels_status.ok()) {
-        LOG(FATAL) << "Couldn't load labels: " << labels_status;
-    }
-    [self setupAVCapture];
-}
-
-// Init loads the graphs and then sets up the avcapture
--(id)init
-{
-    if ( self = [super init] )
-    {
-        [self setup];
-    }
-    return self;
-}
-
-
 
 /**
     TO DO : 
@@ -439,8 +377,5 @@ std::vector<std::string> labels;
     
     
 }
-
-
-
 
 @end
