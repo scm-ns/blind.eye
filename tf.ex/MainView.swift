@@ -23,7 +23,244 @@ import UIKit
 import AVFoundation
 
 
+class GradientView : UIView // to handle auto resizing of graident
+{
+    private let gradient = CAGradientLayer()
+    
+    init(colors : [UIColor] = [UIColor.red , UIColor.yellow]) {
+        super.init(frame: CGRect.zero)
+        gradient.colors = colors
+        gradient.startPoint =  CGPoint(x: 0, y: 0)
+        gradient.endPoint =  CGPoint(x: 1, y: 1)
+        self.layer.insertSublayer(gradient, at: 0)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+  
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        gradient.frame = self.bounds
+    }
+   
+}
 
+
+class bounceView : UIView
+{
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
+      
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 4, options: .curveEaseInOut, animations:
+        {
+                self.transform = CGAffineTransform.identity
+        }, completion: nil)
+        
+       
+        super.touchesBegan(touches, with: event)
+    }
+}
+
+
+class belliv : UIImageView
+{
+
+    init() {
+        super.init(image: UIImage(named: "bell"))
+        self.contentMode = .scaleAspectFit
+        self.backgroundColor = UIColor.darkGray
+      
+        self.layer.cornerRadius = 10
+        self.layer.borderWidth = 1.0
+        self.layer.borderColor = UIColor.green.cgColor
+      
+        self.layer.shadowColor = UIColor.black.cgColor
+        self.layer.shadowOffset = CGSize(width: 3, height: 3)
+        self.layer.shadowOpacity = 0.7
+        self.layer.shadowRadius = 4.0
+    
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+   
+}
+
+
+class specialView : UIView
+{
+    var bellArr :[belliv]  = []
+    override init(frame: CGRect) {
+       super.init(frame: frame)
+       
+        bellArr.append(belliv())
+        bellArr.append(belliv())
+        bellArr.append(belliv())
+        bellArr.append(belliv())
+
+        self.addSubview(bellArr[0])
+        self.addSubview(bellArr[1])
+        self.addSubview(bellArr[2])
+        self.addSubview(bellArr[2])
+        
+        bellArr[1].alpha = 0
+        bellArr[2].alpha = 0
+        bellArr[3].alpha = 0
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    
+        
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 4, options: .curveEaseInOut, animations:
+            {
+                self.bellArr[1].alpha = 1
+                self.bellArr[2].alpha = 1
+                self.bellArr[3].alpha = 1
+                
+                self.bellArr[1].transform = CGAffineTransform(scaleX: self.frame.width, y: 0)
+                self.bellArr[2].transform = CGAffineTransform(scaleX: 0, y: self.frame.width)
+                self.bellArr[3].transform = CGAffineTransform(scaleX: self.frame.width, y: self.frame.width)
+
+        }, completion: nil)
+        
+        
+        super.touchesBegan(touches, with: event)
+    }
+    
+}
+
+
+class MainVC : UIViewController
+{
+    
+    let headerView : UIView = {
+        let view  = bounceView(frame: .zero)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.blue
+        
+           // GradientView()
+        return view
+    }()
+ 
+    let bellView : specialView = {
+        let iv = specialView(frame: .zero)
+        return iv
+    }()
+    
+    
+    let mainCollectionView : UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        // resize using autolayout
+        let colView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
+        colView.translatesAutoresizingMaskIntoConstraints = false
+        colView.backgroundColor = UIColor.red
+        return colView
+    }()
+    
+    //let mainDataSource = MainDataSource()
+    
+    // MARK -: Initialization
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        self.view.backgroundColor = UIColor.yellow
+        print(self.view)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+        print(self.view)
+        hideViewsForAnimation()
+    }
+   
+    func hideViewsForAnimation()
+    {
+        self.mainCollectionView.alpha = 0
+        self.headerView.alpha = 0
+        self.bellView.alpha = 0
+    }
+   
+    override func viewDidAppear(_ animated: Bool)
+    {
+        super.viewDidAppear(animated)
+        let duration = 0.5
+        
+        UIView.animate(withDuration: duration, animations:
+        {
+           self.headerView.alpha = 1
+        },
+        completion:
+        {
+           _ in
+            UIView.animate(withDuration: duration, animations:
+            {
+                    self.mainCollectionView.alpha = 1
+            },
+            completion :
+            {
+                _ in
+                UIView.animate(withDuration: duration, animations:
+                {
+                       self.bellView.alpha = 1
+                },
+                completion:
+                {
+                    _ in
+                    print("animation complete")
+                })
+            })
+            
+        })
+    }
+    
+    func setupView()
+    {
+        // layout main collectoinview
+        self.view.addSubview(self.mainCollectionView)
+        self.view.addSubview(self.headerView)
+        self.view.addSubview(self.bellView)
+        
+        
+        let viewMapping = ["v0":self.mainCollectionView , "v1" : self.headerView , "v2" : self.bellView]
+        var constraints : [NSLayoutConstraint] = []
+      
+        //  line up the bell and header
+        constraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|-[v1]-[v2(==v1)]-|", options: [.alignAllCenterY ], metrics: [:], views: viewMapping))
+        
+        constraints.append(contentsOf:   NSLayoutConstraint.constraints(withVisualFormat: "V:|-==20-[v1(>=50)]", options: [], metrics: [:], views: viewMapping) )
+        
+        constraints.append(NSLayoutConstraint(item: self.bellView , attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: self.headerView, attribute: NSLayoutAttribute.height, multiplier: 1, constant: 0))
+       
+        
+        constraints.append(contentsOf:   NSLayoutConstraint.constraints(withVisualFormat: "V:[v1]-[v0]-==20-|", options: [], metrics: [:], views: viewMapping) )
+      
+        // make header height 0.2 of the mainCollectionView
+       constraints.append(NSLayoutConstraint(item: self.headerView, attribute: NSLayoutAttribute.height , relatedBy: NSLayoutRelation.lessThanOrEqual, toItem: self.mainCollectionView, attribute: NSLayoutAttribute.height, multiplier: 0.20, constant: 0))
+        
+       constraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|-[v0]-|", options: [], metrics: [:], views: viewMapping))
+      
+        
+        NSLayoutConstraint.activate(constraints)
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+    }
+}
+
+/*
 class MainView: UICollectionViewController , UICollectionViewDelegateFlowLayout
 {
 
@@ -257,3 +494,4 @@ class ItemCell : UICollectionViewCell
         self.backgroundColor = UIColor.purple
     }
 }
+*/
