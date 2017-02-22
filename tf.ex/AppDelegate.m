@@ -52,4 +52,10 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+- (BOOL)respondsToSelector:(SEL)aSelector
+{
+    NSLog(NSStringFromSelector(aSelector));
+    return [super respondsToSelector:aSelector];
+}
+
 @end
