@@ -66,22 +66,59 @@ std::vector<std::string> labels;
 {
     if ( self = [super init] )
     {
-        [self setup];
-        
-        // <+>Serial queue, this is limiting. Why a serial queue ?
+         // <+>Serial queue, this is limiting. Why a serial queue ?
         processImageQueue = dispatch_queue_create("VideoDataOutputQueue", DISPATCH_QUEUE_SERIAL);
+        
+        [self setup];
+       
+        _classes = nil;
+        oldPredictionValues = nil;
+        
     }
     return self;
 }
 
+
+-(void)setup
+{
+    
+    // Form the group
+    processImageGroup =  dispatch_group_create();
+    
+    labelLayers = [[NSMutableArray alloc] init];
+    oldPredictionValues = [[NSMutableDictionary alloc] init];
+    
+    tensorflow::Status load_status;
+    if (model_uses_memory_mapping)
+    {
+        load_status = LoadMemoryMappedModel(
+                                            model_file_name, model_file_type, &tf_session, &tf_memmapped_env);
+    }
+    else
+    {
+        load_status = LoadModel(model_file_name, model_file_type, &tf_session);
+    }
+    
+    if (!load_status.ok()) {
+        LOG(FATAL) << "Couldn't load model: " << load_status;
+    }
+    
+    tensorflow::Status labels_status =
+    LoadLabels(labels_file_name, labels_file_type, &labels);
+    if (!labels_status.ok()) {
+        LOG(FATAL) << "Couldn't load labels: " << labels_status;
+    }
+    
+    
+    [self setupAVCapture];
+}
 
 -(void)setupAVCapture
 {
     NSError *error = nil;
     
     session = [AVCaptureSession new];
-    if ([[UIDevice currentDevice] userInterfaceIdiom] ==
-        UIUserInterfaceIdiomPhone)
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
         [session setSessionPreset:AVCaptureSessionPreset640x480];
     else
         [session setSessionPreset:AVCaptureSessionPresetPhoto];
@@ -167,6 +204,8 @@ std::vector<std::string> labels;
     We do not want each image that is output from the video to be analyzed. 
     We only want to do this , when a timer goes off and the data source is said to analyze the scene
 
+    // this function is called repeatedly by the video camera ?
+ 
  @param captureOutput <#captureOutput description#>
  @param sampleBuffer <#sampleBuffer description#>
  @param connection <#connection description#>
@@ -308,7 +347,7 @@ std::vector<std::string> labels;
     const float decayValue = 0.50f;
     const float updateValue = 0.25f;
     const float minimumThreshold = 0.01f;
-    
+   
     NSMutableDictionary *decayedPredictionValues = [[NSMutableDictionary alloc] init];
     for (NSString *label in oldPredictionValues) // go through the old predictions
     {
@@ -322,15 +361,20 @@ std::vector<std::string> labels;
             [decayedPredictionValues setObject:decayedPredictionValueObject forKey:label];
         }
     }
-
+    
+    _classes = [decayedPredictionValues allKeys]; // get all the labeles which represents the different classs
+    
+    [oldPredictionValues removeAllObjects]; // 
+   
+    [oldPredictionValues addEntriesFromDictionary:decayedPredictionValues];
 }
 
+/*
 /**
     TO DO : 
         Try to use the IBM Watson servers to get the prediction
 
  @param img The pixel buffer to be used for the recognition
- */
 -(void)ibmPOSTRequestWithImage:(CVPixelBufferRef)img
 {
     // convert CIimage to png
@@ -377,5 +421,5 @@ std::vector<std::string> labels;
     
     
 }
-
+*/
 @end
