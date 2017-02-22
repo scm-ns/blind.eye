@@ -66,7 +66,8 @@ class bounceView : UIView
 class belliv : UIImageView
 {
 
-    init() {
+    init()
+    {
         super.init(image: UIImage(named: "bell"))
         self.contentMode = .scaleAspectFit
         self.backgroundColor = UIColor.darkGray
@@ -139,7 +140,7 @@ class specialView : UIView
 class MainVC : UIViewController
 {
     
-    let headerView : UIView = {
+    private let headerView : UIView = {
         let view  = bounceView(frame: .zero)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.blue
@@ -148,29 +149,38 @@ class MainVC : UIViewController
         return view
     }()
  
-    let bellView : specialView = {
-        let iv = specialView(frame: .zero)
+    private let bellView : UIView = {
+        let iv = belliv()
+        iv.translatesAutoresizingMaskIntoConstraints = false
         return iv
     }()
     
     
-    let mainCollectionView : UICollectionView = {
+    private let mainCollectionView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         // resize using autolayout
         let colView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         colView.translatesAutoresizingMaskIntoConstraints = false
+        colView.backgroundView?.backgroundColor = UIColor.white
         colView.backgroundColor = UIColor.red
+        colView.register(tensorFlowCell.self, forCellWithReuseIdentifier: tensorFlowCell.cell_identifier)
         return colView
     }()
     
-    //let mainDataSource = MainDataSource()
+    private let ds = mainDataSource()
+   
     
     // MARK -: Initialization
-    init() {
+    init()
+    {
         super.init(nibName: nil, bundle: nil)
         self.view.backgroundColor = UIColor.yellow
         print(self.view)
+        
+        self.mainCollectionView.dataSource = self.ds
+        self.mainCollectionView.delegate = self.ds
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -259,6 +269,220 @@ class MainVC : UIViewController
         
     }
 }
+
+// Holds the different sections, where each of the them will be a collection view
+// Register cells
+// the mainDataSource is just a container. It has ntohgint to load. 
+// It will just hold the different sections, correponding to the different types of sections
+// with cells in them. 
+class mainDataSource: NSObject, UICollectionViewDataSource , UICollectionViewDelegateFlowLayout
+{
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1; 
+    }
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 1;
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: tensorFlowCell.cell_identifier, for: indexPath)
+        
+        return cell
+        
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
+    {
+            return CGSize(width: (collectionView.bounds.width), height: 200)
+    }
+}
+
+// Holds a collection view inside it, which shows the results of the inception network running
+class tensorFlowCell : UICollectionViewCell
+{
+    static public let cell_identifier = "tensorFlowCell"
+    
+    let collectionView : UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        // resize using autolayout
+        let colView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
+        colView.translatesAutoresizingMaskIntoConstraints = false
+        colView.backgroundView?.backgroundColor = UIColor.white
+        colView.register(outputCell.self, forCellWithReuseIdentifier: outputCell.cell_identifier)
+        return colView
+    }()
+  
+    private var ds : tensorFlowDataSource?
+    
+    override init(frame: CGRect)
+    {
+        
+       super.init(frame: frame)
+       setupViews()
+       ds = tensorFlowDataSource(collectionView: self.collectionView) // double retention cycle. 
+       self.collectionView.dataSource = ds
+       self.collectionView.delegate = ds
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupViews()
+    {
+        self.contentView.backgroundColor = UIColor.purple
+        self.addSubview(self.collectionView)
+        
+       // setup the collection view
+        let viewMapping = ["v0":self.collectionView]
+        
+        var constraints : [NSLayoutConstraint] = []
+        constraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|-[v0]-|", options: [], metrics: [:], views: viewMapping))
+        constraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:|-[v0]-|", options: [], metrics: [:], views: viewMapping))
+       
+        NSLayoutConstraint.activate(constraints)
+    }
+}
+
+class tensorFlowDataSource : NSObject , UICollectionViewDataSource , UICollectionViewDelegateFlowLayout
+{
+    // this has to be some sort of delegate that is implmented.
+    /// I need to create a protocl which can handle the talking between the machien learning part and the data soruce part
+    
+    // architecture question : I need to make sure that I am implementing things properly.
+    // I do not want to give access to the ml part to the view controller. I just need to make sure that
+    // the collection view has be reloated when the prediction data source has completed functioning.
+    // I need the timer to be part of the data source and not the view controller.
+    // The best way to do this , is by using a reference ot the vc and called reload of it when the data has been laoded
+    
+    private let ds : PredictionDataSource
+
+    // timer to call the prediction data source and force it to create a predictin
+   
+    private var timer : Timer?
+    
+    private let colView : UICollectionView
+    
+    init(collectionView : UICollectionView)
+    {
+       /// TO DO : The data source can be different based on the type of algorithm that is being run
+       /// Each Alogorithm will have its own data source. 
+       /// All the different types of data source will conform to a single protocol
+       /// The Protocol should have a 
+                        /// basic analyze completion handler.
+                        /// Standard Data Source methods for predictions etc
+        ds  = PredictionDataSource() // Load the data source
+        ds.setup()
+        colView = collectionView
+        
+        super.init()
+
+        timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(tensorFlowDataSource.analyze), userInfo: nil, repeats: true)
+    }
+   
+    /// Single Section for each Cell
+    func numberOfSections(in collectionView: UICollectionView) -> Int
+    {
+        return 1 ;
+    }
+   
+    func analyze()
+    {
+        ds.analyze(com: {
+            self.colView.reloadData()
+            print("analyziz image")
+        })
+        
+   }
+   
+    deinit
+    {
+        timer?.invalidate()
+    }
+    
+    /// Number of items are based on the number of classes that have been detected by the algorithm
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
+    {
+         // if data ds has no classes
+        if let cla = self.ds.classes
+        {
+            print("number of items detected \(cla.count)")
+            return cla.count
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
+    {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: outputCell.cell_identifier, for: indexPath)
+            
+            return cell
+    }   
+
+   
+}
+
+class outputCellViewModel
+{
+    let labelStr : String
+    init(label : String)
+    {
+        labelStr = label
+    }
+}
+
+class outputCell : UICollectionViewCell
+{
+    static let cell_identifier  = "ouput_cell"
+    
+    private var viewModel : outputCellViewModel?
+    {
+        didSet
+        {
+            self.label.text = viewModel?.labelStr
+        }
+    }
+   
+    private let label : UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = UIColor.yellow
+        label.backgroundColor = UIColor.blue
+        label.adjustsFontSizeToFitWidth = true
+        return label
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupViews()
+    }
+   
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+   
+    private func setupViews()
+    {
+        self.contentView.backgroundColor = UIColor.purple
+        self.contentView.addSubview(self.label)
+        
+        let viewMapping : [String : AnyObject] = ["v0" : self.label]
+        var constrains: [NSLayoutConstraint] = []
+        
+        constrains.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|-[v0]-|", options: [], metrics: [:], views: viewMapping))
+        constrains.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:|-[v0]-|", options: [], metrics: [:], views: viewMapping))
+        
+        NSLayoutConstraint.activate(constrains)
+    }
+    
+}
+
 
 /*
 class MainView: UICollectionViewController , UICollectionViewDelegateFlowLayout
@@ -420,59 +644,6 @@ class SubCellView : UICollectionViewCell
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-}
-
-/// Provides information about the number of cells to be placed in sub cell view
-class SubCellDataSource : NSObject , UICollectionViewDataSource , UICollectionViewDelegate,  UICollectionViewDelegateFlowLayout
-{
-    private var cellIdentifier = "cell_1"
-    private var ds : PredictionDataSource?
-  
-    override init()
-    {
-       /// TO DO : The data source can be different based on the type of algorithm that is being run
-       /// Each Alogorithm will have its own data source. 
-       /// All the different types of data source will conform to a single protocol
-       /// The Protocol should have a 
-                        /// basic analyze completion handler.
-                        /// Standard Data Source methods for predictions etc
-            ds  = PredictionDataSource() // Load the data source
-            super.init()
-    }
-    
-    /// Helper func which registers the collection view with the requried cells
-    /// The cell identifier can be make private to the date source
-    func register(collectionView: UICollectionView)
-    {
-            collectionView.register( ItemCell.self , forCellWithReuseIdentifier: cellIdentifier)
-    }
-   
-    /// Single Section for each Cell
-    func numberOfSections(in collectionView: UICollectionView) -> Int
-    {
-        return 1 ;
-    }
-    
-    /// Number of items are based on the number of classes that have been detected by the algorithm
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
-    {
-         // if data ds has no classes
-        if let cla = self.ds?.classes
-        {
-            return cla.count
-        }
-        else
-        {
-            return 0;
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
-    {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
-            return cell
-    }
-    
 }
 
 
