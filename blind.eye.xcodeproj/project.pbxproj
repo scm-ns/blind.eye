@@ -13,16 +13,19 @@
 		361F99861DDFDB3D00EEAD20 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 361F99851DDFDB3D00EEAD20 /* main.m */; };
 		361F99891DDFDB3D00EEAD20 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 361F99881DDFDB3D00EEAD20 /* AppDelegate.m */; };
 		361F99911DDFDB3D00EEAD20 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 361F99901DDFDB3D00EEAD20 /* Assets.xcassets */; };
-		361F999C1DDFDBE600EEAD20 /* libtensorflow-core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 361F999B1DDFDBE500EEAD20 /* libtensorflow-core.a */; };
-		361F999F1DDFE19400EEAD20 /* libprotobuf-lite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 361F999D1DDFE19400EEAD20 /* libprotobuf-lite.a */; };
-		361F99A01DDFE19400EEAD20 /* libprotobuf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 361F999E1DDFE19400EEAD20 /* libprotobuf.a */; };
 		361F99A21DDFE4E900EEAD20 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 361F99A11DDFE4E900EEAD20 /* Accelerate.framework */; };
 		361F99A41DDFEE9800EEAD20 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 361F99A31DDFEE9800EEAD20 /* libc++.tbd */; };
 		361F99AC1DE0E81600EEAD20 /* PredictionDataSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 361F99AB1DE0E81600EEAD20 /* PredictionDataSource.mm */; };
 		361F99AE1DE0E81600EEAD20 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 361F99AD1DE0E81600EEAD20 /* AVFoundation.framework */; };
 		36A348B31E243A250062E21D /* imagenet_comp_graph_label_strings.txt in Resources */ = {isa = PBXBuildFile; fileRef = 36A348B21E243A250062E21D /* imagenet_comp_graph_label_strings.txt */; };
+		36CA9EC21E642B4E0052C402 /* tensorFlowCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CA9EC11E642B4E0052C402 /* tensorFlowCell.swift */; };
+		36CA9EC41E642BB00052C402 /* outputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CA9EC31E642BB00052C402 /* outputCell.swift */; };
 		36F8203D1DE0A991005DEC05 /* tensorflow_utils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 36F8203C1DE0A991005DEC05 /* tensorflow_utils.mm */; };
 		36F820431DE0B397005DEC05 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F820421DE0B397005DEC05 /* MainView.swift */; };
+		36F9F9B71E5DB12800056568 /* libtensorflow-core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 36F9F9B61E5DB12800056568 /* libtensorflow-core.a */; };
+		36F9F9B91E5DB14400056568 /* libprotobuf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 36F9F9B81E5DB14400056568 /* libprotobuf.a */; };
+		36F9F9BB1E5DB15C00056568 /* libprotobuf-lite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 36F9F9BA1E5DB15C00056568 /* libprotobuf-lite.a */; };
+		36F9F9BC1E5DB21700056568 /* tensorflow_inception_graph.pb in Resources */ = {isa = PBXBuildFile; fileRef = 36A348B11E243A200062E21D /* tensorflow_inception_graph.pb */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,9 +38,6 @@
 		361F99881DDFDB3D00EEAD20 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		361F99901DDFDB3D00EEAD20 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		361F99951DDFDB3D00EEAD20 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		361F999B1DDFDBE500EEAD20 /* libtensorflow-core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libtensorflow-core.a"; path = "../../deep_learning/tf/tensorflow/tensorflow/contrib/makefile/gen/lib/libtensorflow-core.a"; sourceTree = "<group>"; };
-		361F999D1DDFE19400EEAD20 /* libprotobuf-lite.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libprotobuf-lite.a"; path = "../../deep_learning/tf/tensorflow/tensorflow/contrib/makefile/gen/protobuf_ios/lib/libprotobuf-lite.a"; sourceTree = "<group>"; };
-		361F999E1DDFE19400EEAD20 /* libprotobuf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libprotobuf.a; path = ../../deep_learning/tf/tensorflow/tensorflow/contrib/makefile/gen/protobuf_ios/lib/libprotobuf.a; sourceTree = "<group>"; };
 		361F99A11DDFE4E900EEAD20 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		361F99A31DDFEE9800EEAD20 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		361F99AA1DE0E81600EEAD20 /* PredictionDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PredictionDataSource.h; sourceTree = "<group>"; };
@@ -45,10 +45,15 @@
 		361F99AD1DE0E81600EEAD20 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		36A348B11E243A200062E21D /* tensorflow_inception_graph.pb */ = {isa = PBXFileReference; lastKnownFileType = file; path = tensorflow_inception_graph.pb; sourceTree = "<group>"; };
 		36A348B21E243A250062E21D /* imagenet_comp_graph_label_strings.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = imagenet_comp_graph_label_strings.txt; sourceTree = "<group>"; };
+		36CA9EC11E642B4E0052C402 /* tensorFlowCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tensorFlowCell.swift; sourceTree = "<group>"; };
+		36CA9EC31E642BB00052C402 /* outputCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = outputCell.swift; sourceTree = "<group>"; };
 		36F8203B1DE0A991005DEC05 /* tensorflow_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tensorflow_utils.h; sourceTree = "<group>"; };
 		36F8203C1DE0A991005DEC05 /* tensorflow_utils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = tensorflow_utils.mm; sourceTree = "<group>"; };
 		36F8203F1DE0AE7E005DEC05 /* tf.ex-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "tf.ex-Bridging-Header.h"; sourceTree = "<group>"; };
 		36F820421DE0B397005DEC05 /* MainView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		36F9F9B61E5DB12800056568 /* libtensorflow-core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libtensorflow-core.a"; path = "../../Desktop/deep_learning/tf/tensorflow/tensorflow/contrib/makefile/gen/lib/libtensorflow-core.a"; sourceTree = "<group>"; };
+		36F9F9B81E5DB14400056568 /* libprotobuf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libprotobuf.a; path = ../../Desktop/deep_learning/tf/tensorflow/tensorflow/contrib/makefile/gen/protobuf_ios/lib/libprotobuf.a; sourceTree = "<group>"; };
+		36F9F9BA1E5DB15C00056568 /* libprotobuf-lite.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libprotobuf-lite.a"; path = "../../Desktop/deep_learning/tf/tensorflow/tensorflow/contrib/makefile/gen/protobuf_ios/lib/libprotobuf-lite.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,11 +65,11 @@
 				360C1B271DE12B620028BFA7 /* ImageIO.framework in Frameworks */,
 				360C1B251DE12B5C0028BFA7 /* QuartzCore.framework in Frameworks */,
 				361F99AE1DE0E81600EEAD20 /* AVFoundation.framework in Frameworks */,
+				36F9F9B91E5DB14400056568 /* libprotobuf.a in Frameworks */,
 				361F99A41DDFEE9800EEAD20 /* libc++.tbd in Frameworks */,
 				361F99A21DDFE4E900EEAD20 /* Accelerate.framework in Frameworks */,
-				361F999F1DDFE19400EEAD20 /* libprotobuf-lite.a in Frameworks */,
-				361F99A01DDFE19400EEAD20 /* libprotobuf.a in Frameworks */,
-				361F999C1DDFDBE600EEAD20 /* libtensorflow-core.a in Frameworks */,
+				36F9F9B71E5DB12800056568 /* libtensorflow-core.a in Frameworks */,
+				36F9F9BB1E5DB15C00056568 /* libprotobuf-lite.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,6 +99,8 @@
 				361F99871DDFDB3D00EEAD20 /* AppDelegate.h */,
 				361F99881DDFDB3D00EEAD20 /* AppDelegate.m */,
 				36F820421DE0B397005DEC05 /* MainView.swift */,
+				36CA9EC11E642B4E0052C402 /* tensorFlowCell.swift */,
+				36CA9EC31E642BB00052C402 /* outputCell.swift */,
 				361F99AA1DE0E81600EEAD20 /* PredictionDataSource.h */,
 				361F99AB1DE0E81600EEAD20 /* PredictionDataSource.mm */,
 				361F99901DDFDB3D00EEAD20 /* Assets.xcassets */,
@@ -119,14 +126,14 @@
 		36F8203E1DE0A9A5005DEC05 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				36F9F9BA1E5DB15C00056568 /* libprotobuf-lite.a */,
 				360C1B281DE12B900028BFA7 /* CoreMedia.framework */,
 				360C1B261DE12B620028BFA7 /* ImageIO.framework */,
 				360C1B241DE12B5C0028BFA7 /* QuartzCore.framework */,
 				361F99A31DDFEE9800EEAD20 /* libc++.tbd */,
 				361F99A11DDFE4E900EEAD20 /* Accelerate.framework */,
-				361F999D1DDFE19400EEAD20 /* libprotobuf-lite.a */,
-				361F999E1DDFE19400EEAD20 /* libprotobuf.a */,
-				361F999B1DDFDBE500EEAD20 /* libtensorflow-core.a */,
+				36F9F9B81E5DB14400056568 /* libprotobuf.a */,
+				36F9F9B61E5DB12800056568 /* libtensorflow-core.a */,
 				361F99AD1DE0E81600EEAD20 /* AVFoundation.framework */,
 			);
 			name = Frameworks;
@@ -192,6 +199,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				36A348B31E243A250062E21D /* imagenet_comp_graph_label_strings.txt in Resources */,
+				36F9F9BC1E5DB21700056568 /* tensorflow_inception_graph.pb in Resources */,
 				361F99911DDFDB3D00EEAD20 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -203,6 +211,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36CA9EC21E642B4E0052C402 /* tensorFlowCell.swift in Sources */,
+				36CA9EC41E642BB00052C402 /* outputCell.swift in Sources */,
 				361F99AC1DE0E81600EEAD20 /* PredictionDataSource.mm in Sources */,
 				361F99891DDFDB3D00EEAD20 /* AppDelegate.m in Sources */,
 				36F8203D1DE0A991005DEC05 /* tensorflow_utils.mm in Sources */,
