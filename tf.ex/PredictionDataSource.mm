@@ -66,14 +66,12 @@ std::vector<std::string> labels;
 {
     if ( self = [super init] )
     {
-         // <+>Serial queue, this is limiting. Why a serial queue ?
-        processImageQueue = dispatch_queue_create("VideoDataOutputQueue", DISPATCH_QUEUE_SERIAL);
-        
         [self setup];
-       
+      
+        NSLog(@"init prediction data source ");
+        
         _classes = nil;
         oldPredictionValues = nil;
-        
     }
     return self;
 }
@@ -81,6 +79,8 @@ std::vector<std::string> labels;
 
 -(void)setup
 {
+    
+    processImageQueue = dispatch_queue_create("VideoDataOutputQueue", DISPATCH_QUEUE_SERIAL);
     
     // Form the group
     processImageGroup =  dispatch_group_create();
@@ -105,7 +105,8 @@ std::vector<std::string> labels;
     
     tensorflow::Status labels_status =
     LoadLabels(labels_file_name, labels_file_type, &labels);
-    if (!labels_status.ok()) {
+    if (!labels_status.ok())
+    {
         LOG(FATAL) << "Couldn't load labels: " << labels_status;
     }
     
@@ -146,7 +147,7 @@ std::vector<std::string> labels;
                                        dictionaryWithObject:[NSNumber numberWithInt:kCMPixelFormat_32BGRA]
                                        forKey:(id)kCVPixelBufferPixelFormatTypeKey];
     
-    [videoDataOutput setVideoSettings:rgbOutputSettings]; // May be does the required convertions
+    [videoDataOutput setVideoSettings:rgbOutputSettings];
     [videoDataOutput setAlwaysDiscardsLateVideoFrames:YES];
  
     // set up buffering
@@ -186,8 +187,6 @@ std::vector<std::string> labels;
 {
     // Now analyze the image in front of us
     analyzeCurrentFrame = true;
-    //NSLog(@"Entering block");
-    dispatch_group_enter(processImageGroup);
    
     // processImag is a serial queue, so this block gets executed at the end ?
     // but why is it a seiral quue ?
@@ -213,17 +212,22 @@ std::vector<std::string> labels;
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
     // the buffering is done within the image process queue
-    // so now enter the group
-
+   
     
     if(analyzeCurrentFrame)
     {
 
+        // so now enter the group
+        // Note : we add the block to the group only when work is to be done in this block
+        // and leave the group when the work has been done, there by allowing the group notificatoin to fire,
+        // helping up refresh the UI.
+        NSLog(@"Entering block");
+        dispatch_group_enter(processImageGroup);
+   
         analyzeCurrentFrame = false;
     
         CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer); // get the image from the buffer
         
-
         [self runCNNOnFrame:pixelBuffer]; // run the cnn created from the graph
         
         
@@ -338,6 +342,7 @@ std::vector<std::string> labels;
 }
 
 
+
 /*
  Obtain the prediction from the cnn and update the items with some decay ?
  
@@ -347,7 +352,7 @@ std::vector<std::string> labels;
     const float decayValue = 0.50f;
     const float updateValue = 0.25f;
     const float minimumThreshold = 0.01f;
-   
+    
     NSMutableDictionary *decayedPredictionValues = [[NSMutableDictionary alloc] init];
     for (NSString *label in oldPredictionValues) // go through the old predictions
     {
@@ -362,11 +367,53 @@ std::vector<std::string> labels;
         }
     }
     
-    _classes = [decayedPredictionValues allKeys]; // get all the labeles which represents the different classs
+    oldPredictionValues = decayedPredictionValues;
     
-    [oldPredictionValues removeAllObjects]; // 
-   
-    [oldPredictionValues addEntriesFromDictionary:decayedPredictionValues];
+    for (NSString *label in newValues)
+    {
+        NSNumber *newPredictionValueObject = [newValues objectForKey:label];
+        NSNumber *oldPredictionValueObject = [oldPredictionValues objectForKey:label];
+        if (!oldPredictionValueObject)
+        {
+            oldPredictionValueObject = [NSNumber numberWithFloat:0.0f];
+        }
+        
+        const float newPredictionValue = [newPredictionValueObject floatValue];
+        const float oldPredictionValue = [oldPredictionValueObject floatValue];
+        const float updatedPredictionValue = (oldPredictionValue + (newPredictionValue * updateValue)); // combine the old and new pred values
+        
+        NSNumber *updatedPredictionValueObject = [NSNumber numberWithFloat:updatedPredictionValue];
+        [oldPredictionValues setObject:updatedPredictionValueObject forKey:label];
+    }
+    // now the old pred val has both the pred and the new labels. With their probabilities adjusted properly
+    
+    NSArray *candidateLabels = [NSMutableArray array];
+    for (NSString *label in oldPredictionValues)
+    {
+        NSNumber *oldPredictionValueObject = [oldPredictionValues objectForKey:label];
+        const float oldPredictionValue = [oldPredictionValueObject floatValue];
+        if (oldPredictionValue > 0.05f) // Check if the prediction is actually probable.
+        {
+            NSDictionary *entry = @
+            {
+                @"label" : label,
+                @"value" : oldPredictionValueObject
+            };
+            candidateLabels = [candidateLabels arrayByAddingObject:entry];
+        }
+    }
+    // Sort the labels in descending order
+    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"value" ascending:NO];
+    NSArray *sortedLabels = [candidateLabels sortedArrayUsingDescriptors:[NSArray arrayWithObject:sort]];
+    
+    // the sortedLabels are the results that we will show in the collection view .. So Now the group has stopped
+    self.classes = sortedLabels;
+    
+    
+    // the processing done in the process image is completed, hence we leave the group
+    NSLog(@"Leave block");
+    dispatch_group_leave(processImageGroup);
+
 }
 
 /*

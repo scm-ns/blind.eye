@@ -130,10 +130,19 @@ class tensorFlowDataSource : NSObject , UICollectionViewDataSource , UICollectio
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
     {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: outputCell.cell_identifier, for: indexPath)
-            
+            let dict : NSDictionary = (self.ds.classes[indexPath.row] as! NSDictionary)
+        
+            let vm = outputCellViewModel(label: dict.object(forKey: "label") as? String)
+        
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: outputCell.cell_identifier, for: indexPath) as! outputCell
+            cell.viewModel = vm;
+        
             return cell
-    }   
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+           return CGSize(width: 50, height: 50)
+    }
 
 }
 

@@ -11,18 +11,24 @@ import UIKit
 
 class outputCellViewModel
 {
-    let labelStr : String
-    init(label : String)
+    let labelStr : String?
+    init(label : String?)
     {
-        labelStr = label
+        if let label = label
+        {
+            labelStr = label
+        }
+        else{
+            labelStr = nil
+        }
     }
 }
 
 class outputCell : UICollectionViewCell
 {
-    static let cell_identifier  = "ouput_cell"
+    static let cell_identifier  = "output_cell"
     
-    private var viewModel : outputCellViewModel?
+    public var viewModel : outputCellViewModel?
     {
         didSet
         {
