@@ -7,12 +7,13 @@
 //
 
 import UIKit
-
+import AVFoundation
 
 // Holds a collection view inside it, which shows the results of the inception network running
-class tensorFlowCell : UICollectionViewCell
+class tensorFlowCell : UICollectionViewCell , cellProtocol
 {
-    static public let cell_identifier = "tensorFlowCell"
+    static var cell_identifer: String = "tensorFlowCell"
+
     
     let collectionView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -29,8 +30,10 @@ class tensorFlowCell : UICollectionViewCell
     
     override init(frame: CGRect)
     {
+       //speechSynth = AVSpeechSynthesizer()
         
        super.init(frame: frame)
+        
        setupViews()
        ds = tensorFlowDataSource(collectionView: self.collectionView) // double retention cycle. 
        self.collectionView.dataSource = ds
@@ -57,7 +60,7 @@ class tensorFlowCell : UICollectionViewCell
     }
 }
 
-class tensorFlowDataSource : NSObject , UICollectionViewDataSource , UICollectionViewDelegateFlowLayout
+class tensorFlowDataSource : NSObject , UICollectionViewDataSource , UICollectionViewDelegate ,UICollectionViewDelegateFlowLayout
 {
     // this has to be some sort of delegate that is implmented.
     /// I need to create a protocl which can handle the talking between the machien learning part and the data soruce part
@@ -75,7 +78,12 @@ class tensorFlowDataSource : NSObject , UICollectionViewDataSource , UICollectio
     private var timer : Timer?
     
     private let colView : UICollectionView
-    
+ 
+    // cache for storing the view models and for selecting items.
+    private var cache : [String : outputCellViewModel]
+   
+    // For now let the data source handle hte
+    private let speechSynth : AVSpeechSynthesizer
     init(collectionView : UICollectionView)
     {
        /// TO DO : The data source can be different based on the type of algorithm that is being run
@@ -87,6 +95,8 @@ class tensorFlowDataSource : NSObject , UICollectionViewDataSource , UICollectio
         ds  = PredictionDataSource() // Load the data source
         ds.setup()
         colView = collectionView
+        cache = [:]
+        speechSynth = AVSpeechSynthesizer()
         
         super.init()
 
@@ -132,10 +142,31 @@ class tensorFlowDataSource : NSObject , UICollectionViewDataSource , UICollectio
     {
             let dict : NSDictionary = (self.ds.classes[indexPath.row] as! NSDictionary)
         
-            let vm = outputCellViewModel(label: dict.object(forKey: "label") as? String)
+            let keyStr = dict.object(forKey: "label") as? String
+      
+            var viewModel : outputCellViewModel
+        
+            if let key = keyStr
+            {
+                if let vm = cache[key]
+                {
+                        viewModel = vm
+                }
+                else
+                {
+                    let vm = outputCellViewModel(label: keyStr)
+                    cache[key] = vm
+                    viewModel = vm
+                }
+                
+            }
+            else
+            {
+                    viewModel = outputCellViewModel(label: nil)
+            }
         
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: outputCell.cell_identifier, for: indexPath) as! outputCell
-            cell.viewModel = vm;
+            cell.viewModel = viewModel
         
             return cell
     }
@@ -144,5 +175,33 @@ class tensorFlowDataSource : NSObject , UICollectionViewDataSource , UICollectio
            return CGSize(width: 50, height: 50)
     }
 
+    // MARK:- Delegate methods to handle touch
+
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        return true // select all the different cells
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: outputCell.cell_identifier, for: indexPath) as! outputCell
+      
+        // animate cell selection
+        UIView.animate(withDuration: 0.5)
+        {
+            cell.backgroundColor = UIColor.cyan
+        }
+       
+        // now speak the item
+        if let str = cell.viewModel?.labelStr
+        {
+            
+        }
+    }
+    
+   
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+    }
+    
+    
 }
 

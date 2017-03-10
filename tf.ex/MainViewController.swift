@@ -104,7 +104,8 @@ class mainDataSource: NSObject, UICollectionViewDataSource , UICollectionViewDel
     private let cellSource = cellRegistrar()
     override init() {
         super.init()
-       
+        cellSource.registerCell(cell:tensorFlowCell.self as! cellProtocol as! cellProtocol.Type )
+        
     }
    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -118,7 +119,8 @@ class mainDataSource: NSObject, UICollectionViewDataSource , UICollectionViewDel
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
     {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellSource.itemAtIndex(index: indexPath.row).cell_identifer, for: indexPath)
+        let cell_identifier = cellSource.itemAtIndex(index: indexPath.row).cell_identifer
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cell_identifier,for: indexPath)
         
         return cell
     }

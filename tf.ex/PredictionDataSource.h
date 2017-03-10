@@ -10,6 +10,34 @@
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 
+/*
+ 
+    How to architect for efficinecy and clean code ?
+ 
+ 
+    imageProcessorProtocol              Starts off the different pipelines, where diffirent types
+        (Data Source)                   of objects are recognize    
+                                        The classes which conform to this would be the different data sources 
+        ^                               feeding different UI Elements
+         |
+ 
+    video source                        Interfaces with the apple system and obtains the
+                                        frames that are seen by the camera
+         ^                              The frames are then send to different imageProcessorProtocol 
+                                        conforming classes which starts off the different pipelines
+                                        where different objects are recognized.
+                    
+                                        
+ 
+     Speed of processing controled        classes conforming to the
+     by a variable at the end of          pro
+     pipeline where the outputs
+     are displayed
+ 
+ 
+ */
+
+
 
 // We do not need a video data output. We only need the prediction.
 /**

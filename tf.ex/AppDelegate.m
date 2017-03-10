@@ -10,7 +10,7 @@
 #import "tf_ex-Swift.h"
 
 @interface AppDelegate ()
-
+@property (nonatomic) RootCoordinator * coodinator;
 @end
 
 @implementation AppDelegate
@@ -20,12 +20,8 @@
     // Override point for customization after application launch.
     
     _window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    _window.rootViewController = [[MainVC alloc] init];
-    
-    [_window makeKeyAndVisible];
-
-    
-    
+    _coodinator =  [[RootCoordinator alloc] initWithWindow : _window ];
+    [_coodinator execute];
     
     return YES;
 }
