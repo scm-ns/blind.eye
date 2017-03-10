@@ -31,8 +31,7 @@ class MainVC : UIViewController
         // resize using autolayout
         let colView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         colView.translatesAutoresizingMaskIntoConstraints = false
-        colView.backgroundView?.backgroundColor = UIColor.white
-        colView.backgroundColor = UIColor.red
+        colView.backgroundColor = UIColor.clear
         colView.register(tensorFlowCell.self, forCellWithReuseIdentifier: tensorFlowCell.cell_identifer)
         return colView
     }()
@@ -42,9 +41,8 @@ class MainVC : UIViewController
     init()
     {
         super.init(nibName: nil, bundle: nil)
-        self.view.backgroundColor = UIColor.yellow
         print(self.view)
-        
+        self.view.backgroundColor = UIColor.clear
         self.mainCollectionView.dataSource = self.ds
         self.mainCollectionView.delegate = self.ds
        
@@ -104,7 +102,7 @@ class mainDataSource: NSObject, UICollectionViewDataSource , UICollectionViewDel
     private let cellSource = cellRegistrar()
     override init() {
         super.init()
-        cellSource.registerCell(cell:tensorFlowCell.self as! cellProtocol as! cellProtocol.Type )
+        cellSource.registerCell(cell:tensorFlowCell.self as cellProtocol.Type )
         
     }
    
