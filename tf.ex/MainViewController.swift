@@ -18,9 +18,9 @@
 //                                      | - Label
 //
 
-
 import UIKit
 import AVFoundation
+
 
 class MainVC : UIViewController
 {
@@ -33,12 +33,11 @@ class MainVC : UIViewController
         colView.translatesAutoresizingMaskIntoConstraints = false
         colView.backgroundView?.backgroundColor = UIColor.white
         colView.backgroundColor = UIColor.red
-        colView.register(tensorFlowCell.self, forCellWithReuseIdentifier: tensorFlowCell.cell_identifier)
+        colView.register(tensorFlowCell.self, forCellWithReuseIdentifier: tensorFlowCell.cell_identifer)
         return colView
     }()
     
     private let ds = mainDataSource()
-    
     // MARK -: Initialization
     init()
     {
@@ -48,7 +47,7 @@ class MainVC : UIViewController
         
         self.mainCollectionView.dataSource = self.ds
         self.mainCollectionView.delegate = self.ds
-        
+       
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -101,19 +100,27 @@ class MainVC : UIViewController
 // with cells in them.
 class mainDataSource: NSObject, UICollectionViewDataSource , UICollectionViewDelegateFlowLayout
 {
+    
+    private let cellSource = cellRegistrar()
+    override init() {
+        super.init()
+       
+    }
+   
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1; 
     }
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1;
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
+    {
+        return cellSource.numberOfCellTypes();
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: tensorFlowCell.cell_identifier, for: indexPath)
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
+    {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellSource.itemAtIndex(index: indexPath.row).cell_identifer, for: indexPath)
         
         return cell
-        
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
