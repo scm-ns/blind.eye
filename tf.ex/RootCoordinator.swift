@@ -171,22 +171,24 @@ final class RootCoordinator : NSObject ,AVCaptureVideoDataOutputSampleBufferDele
         
         self.cameraDataPropogationTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.shouldPropogate), userInfo: nil, repeats: true)
     }
-   
-    
-    func captureOutput(_ captureOutput: AVCaptureOutput!, didDrop sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!)
+  
+    func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!)
     {
             if(self.propogationController)
             {
-                let pixelBuf =  CMSampleBufferGetImageBuffer(sampleBuffer)
-                if let pixelBuf = pixelBuf
+                let pixelBuf : CVPixelBuffer? =  CMSampleBufferGetImageBuffer(sampleBuffer)
+                if let buf = pixelBuf
                 {
-                    self.propogate(pixelBuffer:pixelBuf); // May be the prpogation should be done in a different thread?
-                    self.propogationController = false
+                    DispatchQueue.global(qos: .userInitiated).async
+                    {
+                        self.propogate(pixelBuffer:buf); // May be the prpogation should be done in a different thread?
+                        self.propogationController = false
+                    }
                     print("get valid camera buffer : \(sampleBuffer != nil)")
                 }
             }
     }
-   
+    
     func shouldPropogate()
     {
         if(self.captureSession.isRunning) // propogate only if camera capturing
