@@ -60,7 +60,7 @@ class tensorFlowCell : UICollectionViewCell , cellProtocol
     }
 }
 
-class tensorFlowDataSource : NSObject , UICollectionViewDataSource , UICollectionViewDelegate ,UICollectionViewDelegateFlowLayout
+class tensorFlowDataSource : NSObject , UICollectionViewDataSource , UICollectionViewDelegate ,UICollectionViewDelegateFlowLayout , cameraDataSink
 {
     // this has to be some sort of delegate that is implmented.
     /// I need to create a protocl which can handle the talking between the machien learning part and the data soruce part
@@ -200,6 +200,10 @@ class tensorFlowDataSource : NSObject , UICollectionViewDataSource , UICollectio
     
    
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+    }
+    
+   
+    func processPixelBuffer(pixelBuff: CVPixelBuffer) {
     }
     
     

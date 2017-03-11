@@ -129,11 +129,8 @@ final class RootCoordinator : NSObject ,AVCaptureVideoDataOutputSampleBufferDele
         
         // set up the out for the session
         let videoOutput = AVCaptureVideoDataOutput()
-       
         videoOutput.alwaysDiscardsLateVideoFrames = true
-       
         videoOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as AnyHashable : kCMPixelFormat_32BGRA]
-        
         videoOutput.setSampleBufferDelegate(self, queue: self.cameraSetupAndProcessQeueu)
         
        
@@ -188,6 +185,8 @@ final class RootCoordinator : NSObject ,AVCaptureVideoDataOutputSampleBufferDele
     {
        self.cameraDataSinks.append(sink)
     }
+   
+    
     
     // This is the initial starting point of the app. From the App Delegate the program moves here
     // The Root View setup is done here.

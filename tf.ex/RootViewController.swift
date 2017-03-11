@@ -69,8 +69,8 @@ class RootViewController: UIViewController {
               
                self.blurOverLay.frame = self.view.bounds
                 
-               let button =  UIView(frame: CGRect(x: 10, y: 20, width: self.view.bounds.width - 20, height: 50))
-               button.backgroundColor = UIColor.cyan
+               let button =  UIView(frame: CGRect(x: self.view.bounds.width/2 - 20 , y: 30, width: 40, height: 40))
+               button.backgroundColor = UIColor.red
                self.blurOverLay.contentView.addSubview(button)
         }
     }
@@ -113,7 +113,7 @@ class RootViewController: UIViewController {
         // set up the preview and blur
         self.setupCameraPreview()
         self.setupBlurAboveCameraPreview()
-        self.setupMainVC()
+        //self.setupMainVC()
         
         
         self.view.addSubview(self.blurOverLay)
