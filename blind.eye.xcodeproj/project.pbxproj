@@ -21,6 +21,7 @@
 		3652C3291E72C70000FAAC17 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3652C3281E72C70000FAAC17 /* RootViewController.swift */; };
 		36A348B31E243A250062E21D /* imagenet_comp_graph_label_strings.txt in Resources */ = {isa = PBXBuildFile; fileRef = 36A348B21E243A250062E21D /* imagenet_comp_graph_label_strings.txt */; };
 		36A71CA31E723C62008EC8F7 /* RootCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36A71CA21E723C62008EC8F7 /* RootCoordinator.swift */; };
+		36A875A61E737DF300A5D955 /* tensorFlowDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36A875A51E737DF300A5D955 /* tensorFlowDataSource.swift */; };
 		36CA9EC21E642B4E0052C402 /* tensorFlowCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CA9EC11E642B4E0052C402 /* tensorFlowCell.swift */; };
 		36CA9EC41E642BB00052C402 /* outputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CA9EC31E642BB00052C402 /* outputCell.swift */; };
 		36F8203D1DE0A991005DEC05 /* tensorflow_utils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 36F8203C1DE0A991005DEC05 /* tensorflow_utils.mm */; };
@@ -51,6 +52,7 @@
 		36A348B11E243A200062E21D /* tensorflow_inception_graph.pb */ = {isa = PBXFileReference; lastKnownFileType = file; path = tensorflow_inception_graph.pb; sourceTree = "<group>"; };
 		36A348B21E243A250062E21D /* imagenet_comp_graph_label_strings.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = imagenet_comp_graph_label_strings.txt; sourceTree = "<group>"; };
 		36A71CA21E723C62008EC8F7 /* RootCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootCoordinator.swift; sourceTree = "<group>"; };
+		36A875A51E737DF300A5D955 /* tensorFlowDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tensorFlowDataSource.swift; sourceTree = "<group>"; };
 		36CA9EC11E642B4E0052C402 /* tensorFlowCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tensorFlowCell.swift; sourceTree = "<group>"; };
 		36CA9EC31E642BB00052C402 /* outputCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = outputCell.swift; sourceTree = "<group>"; };
 		36F8203B1DE0A991005DEC05 /* tensorflow_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tensorflow_utils.h; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 				361F99AA1DE0E81600EEAD20 /* PredictionDataSource.h */,
 				362DA5EB1E67202E006B17B3 /* common.swift */,
 				361F99AB1DE0E81600EEAD20 /* PredictionDataSource.mm */,
+				36A875A51E737DF300A5D955 /* tensorFlowDataSource.swift */,
 				361F99901DDFDB3D00EEAD20 /* Assets.xcassets */,
 				361F99951DDFDB3D00EEAD20 /* Info.plist */,
 				361F99841DDFDB3D00EEAD20 /* Supporting Files */,
@@ -220,6 +223,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36A875A61E737DF300A5D955 /* tensorFlowDataSource.swift in Sources */,
 				3652C3291E72C70000FAAC17 /* RootViewController.swift in Sources */,
 				362DA5EC1E67202E006B17B3 /* common.swift in Sources */,
 				36CA9EC21E642B4E0052C402 /* tensorFlowCell.swift in Sources */,

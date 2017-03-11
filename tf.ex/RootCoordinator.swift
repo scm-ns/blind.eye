@@ -13,6 +13,16 @@
     // 4 Left Top Options menu
 
 
+/*
+    How to pass the data up ?
+        Pipe system.
+            Coordinator -> MainVC -> ColView -> One of the cell
+ 
+            Is there a better system. There might be but this is a pretty interesting system.
+ 
+ */
+
+
 enum CameraSetupResult
 {
     case notDetermined
@@ -23,12 +33,25 @@ enum CameraSetupResult
 
 /*
     Camera Image Source 
+    What is the difference between a pipe and a sink
+    A pipe is not the end point.
+    It might do some transformations, but it passes it upwards.
  */
-protocol cameraDataSink {
+
+protocol cameraDataTransport // Does nothing. Allows abstraction between the two different types of
+    // transfers
+{
+}
+
+protocol cameraDataSink : cameraDataTransport
+{
     func processPixelBuffer(pixelBuff : CVPixelBuffer)
 }
 
-
+protocol cameraDataPipe : cameraDataTransport
+{
+    func pipePixelBuffer(pixelBuff : CVPixelBuffer)
+}
 
 final class RootCoordinator : NSObject ,AVCaptureVideoDataOutputSampleBufferDelegate
 {
@@ -43,7 +66,7 @@ final class RootCoordinator : NSObject ,AVCaptureVideoDataOutputSampleBufferDele
     
     private var cameraDataPropogationTimer : Timer? = nil
     private var propogationController : Bool = false
-    private var cameraDataSinks : [cameraDataSink] = []
+    private var cameraDataTranports : [cameraDataTransport] = []
     
     init(window : UIWindow)
     {
@@ -57,8 +80,10 @@ final class RootCoordinator : NSObject ,AVCaptureVideoDataOutputSampleBufferDele
         // setup VC
         self.rootVC = RootViewController(cameraImageLayer: self.cameraPreivewLayer)
         self.window = window
-       
+        
         super.init()
+       
+        self.addTransport(transport: self.rootVC as! cameraDataTransport )
         
         // set up timer which will propogate the data along the chain
         self.cameraDataPropogationTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(RootCoordinator.shouldPropogate), userInfo: nil, repeats: true)
@@ -141,8 +166,10 @@ final class RootCoordinator : NSObject ,AVCaptureVideoDataOutputSampleBufferDele
        
         videoOutput.connection(withMediaType: AVMediaTypeVideo)
         self.captureSession.commitConfiguration()
-    
+   
         self.captureSession.startRunning()
+        
+        self.cameraDataPropogationTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.shouldPropogate), userInfo: nil, repeats: true)
     }
    
     
@@ -153,11 +180,11 @@ final class RootCoordinator : NSObject ,AVCaptureVideoDataOutputSampleBufferDele
                 let pixelBuf =  CMSampleBufferGetImageBuffer(sampleBuffer)
                 if let pixelBuf = pixelBuf
                 {
-                    self.propogate(pixelBuffer:pixelBuf);
+                    self.propogate(pixelBuffer:pixelBuf); // May be the prpogation should be done in a different thread?
                     self.propogationController = false
+                    print("get valid camera buffer : \(sampleBuffer != nil)")
                 }
             }
-        print("get valid camera buffer : \(sampleBuffer != nil)")
     }
    
     func shouldPropogate()
@@ -173,21 +200,33 @@ final class RootCoordinator : NSObject ,AVCaptureVideoDataOutputSampleBufferDele
      */
     func propogate(pixelBuffer : CVPixelBuffer)
     {
-        for sink in self.cameraDataSinks
+        for  tranport in self.cameraDataTranports
         {
-           sink.processPixelBuffer(pixelBuff: pixelBuffer)
+            if let sink = tranport as? cameraDataSink
+            {
+                sink.processPixelBuffer(pixelBuff: pixelBuffer)
+                print("Layer 1 Sink: Propogation Complete")
+            }
+            else if let pipe = tranport as? cameraDataPipe
+            {
+                pipe.pipePixelBuffer(pixelBuff: pixelBuffer)
+                print("Layer 1 Pipe: Propogation Complete")
+            }
+            else
+            {
+                print("Layer 1 : Propogation Failed")
+            }
+            
         }
     }
    
     // Root Coordinator can know about the different classes that it holds. I just need to ensure dependency inversion
     // that is the lower classes should not have to know about the upper classes
-    func addSinks(sink : cameraDataSink)
+    func addTransport(transport : cameraDataTransport)
     {
-       self.cameraDataSinks.append(sink)
+       self.cameraDataTranports.append(transport)
     }
    
-    
-    
     // This is the initial starting point of the app. From the App Delegate the program moves here
     // The Root View setup is done here.
     func execute()
@@ -196,7 +235,6 @@ final class RootCoordinator : NSObject ,AVCaptureVideoDataOutputSampleBufferDele
         self.window.makeKeyAndVisible()
         print("app launched")
     }
-    
     
 }
 

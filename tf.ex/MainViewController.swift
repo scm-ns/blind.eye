@@ -22,7 +22,7 @@ import UIKit
 import AVFoundation
 
 
-class MainVC : UIViewController
+class MainVC : UIViewController , cameraDataPipe
 {
  
     private let mainCollectionView : UICollectionView = {
@@ -88,6 +88,13 @@ class MainVC : UIViewController
         constraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|-[v0]-|", options: [], metrics: [:], views: viewMapping))
         NSLayoutConstraint.activate(constraints)
     }
+   
+   // cameraDataPipe
+    func pipePixelBuffer(pixelBuff: CVPixelBuffer)
+    {
+       self.ds.processPixelBuffer(pixelBuff: pixelBuff)
+        print("Layer 2 Pipe : Propogation Complete")
+    }
     
 }
 
@@ -96,11 +103,13 @@ class MainVC : UIViewController
 // the mainDataSource is just a container. It has ntohgint to load.
 // It will just hold the different sections, correponding to the different types of sections
 // with cells in them.
-class mainDataSource: NSObject, UICollectionViewDataSource , UICollectionViewDelegateFlowLayout
+class mainDataSource: NSObject, UICollectionViewDataSource , UICollectionViewDelegateFlowLayout , cameraDataSink
 {
     
     private let cellSource = cellRegistrar()
-    override init() {
+    private var cameraDataSinks :[cameraDataPipe] = []
+    override init()
+    {
         super.init()
         cellSource.registerCell(cell:tensorFlowCell.self as cellProtocol.Type )
         
@@ -118,13 +127,29 @@ class mainDataSource: NSObject, UICollectionViewDataSource , UICollectionViewDel
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
     {
         let cell_identifier = cellSource.itemAtIndex(index: indexPath.row).cell_identifer
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cell_identifier,for: indexPath)
-        
-        return cell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cell_identifier,for: indexPath)  as! cameraDataPipe
+        cameraDataSinks.append(cell)
+        return cell as! UICollectionViewCell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
     {
             return CGSize(width: (collectionView.bounds.width), height: 200)
     }
+   
+    // This is slighty more complex than a pipe, as it does some distribution to different types of cells
+    // Do I keep an array of cells. How to handle this ?
+    // Do I keep view models for the cells which will be passed these items ?
+    // How to pass data to the cells ?
+    
+    func processPixelBuffer(pixelBuff: CVPixelBuffer)
+    {
+       // WARNING HACK SOLUTION
+       for sink in cameraDataSinks
+       {
+            sink.pipePixelBuffer(pixelBuff: pixelBuff)
+            print("Layer 2 Sink: Propogation Complete")
+       }
+    }
+    
 }

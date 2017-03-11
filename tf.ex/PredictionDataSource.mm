@@ -2,15 +2,14 @@
 //  PredictionDataSource.m
 //  tf.ex
 //
-//  Created by scm197 on 11/19/16.
-//  Copyright © 2016 scm197. All rights reserved.
+//  Created by scm197 on 11/19/16. Nope : Based on GOOG code from tensorflow
 //
 
 #import "PredictionDataSource.h"
 
+// Based on Google's Code
 
 #include <sys/time.h>
-
 #import <memory>
 
 // tensorflow dependencies
@@ -18,7 +17,6 @@
 #include "tensorflow/core/public/session.h"
 #include "tensorflow/core/util/memmapped_file_system.h"
 
-// Based on Google's Code
 
 // Model details
 static NSString* model_file_name = @"tensorflow_inception_graph";
@@ -29,9 +27,6 @@ static NSString* model_file_type = @"pb";
 // GraphDef and parameter file that can be mapped into memory from file to
 // reduce overall memory usage.
 const bool model_uses_memory_mapping = false;
-
-//<+> This is where I will have to make changes so that I can read in multiple graphs.
-
 
 
 // If you have your own model, point this to the labels file.
@@ -49,8 +44,6 @@ const std::string output_layer_name = "softmax1";
 
 
 @interface PredictionDataSource(internalMethods)
--(void)setupAVCapture;
--(void)tearDownAVCapture;
 @end
 
 @implementation PredictionDataSource
@@ -59,7 +52,6 @@ const std::string output_layer_name = "softmax1";
 std::unique_ptr<tensorflow::Session> tf_session;
 std::unique_ptr<tensorflow::MemmappedEnv> tf_memmapped_env;
 std::vector<std::string> labels;
-
 
 // Init loads the graphs and then sets up the avcapture
 -(id)init
@@ -76,14 +68,9 @@ std::vector<std::string> labels;
     return self;
 }
 
-
+// Loads the file and setups varaibles
 -(void)setup
 {
-    
-    processImageQueue = dispatch_queue_create("VideoDataOutputQueue", DISPATCH_QUEUE_SERIAL);
-    
-    // Form the group
-    processImageGroup =  dispatch_group_create();
     
     labelLayers = [[NSMutableArray alloc] init];
     oldPredictionValues = [[NSMutableDictionary alloc] init];
@@ -110,132 +97,7 @@ std::vector<std::string> labels;
         LOG(FATAL) << "Couldn't load labels: " << labels_status;
     }
     
-    
-    [self setupAVCapture];
 }
-
--(void)setupAVCapture
-{
-    NSError *error = nil;
-    
-    session = [AVCaptureSession new];
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
-        [session setSessionPreset:AVCaptureSessionPreset640x480];
-    else
-        [session setSessionPreset:AVCaptureSessionPresetPhoto];
-    
-    AVCaptureDevice *device =
-    [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    
-    AVCaptureDeviceInput *deviceInput =
-    [AVCaptureDeviceInput deviceInputWithDevice:device error:&error];
-
-    assert(error == nil);
-    
-    if ([session canAddInput:deviceInput])
-        [session addInput:deviceInput];
-    
-    
-    // will ibm need the still image ? See if the video buffer can be converted into jpeg
-    stillImageOutput = [AVCaptureStillImageOutput new];
-    if ([session canAddOutput:stillImageOutput])
-        [session addOutput:stillImageOutput];
-    
-    videoDataOutput = [AVCaptureVideoDataOutput new]; // Cap the video from the session
-    
-    NSDictionary *rgbOutputSettings = [NSDictionary //
-                                       dictionaryWithObject:[NSNumber numberWithInt:kCMPixelFormat_32BGRA]
-                                       forKey:(id)kCVPixelBufferPixelFormatTypeKey];
-    
-    [videoDataOutput setVideoSettings:rgbOutputSettings];
-    [videoDataOutput setAlwaysDiscardsLateVideoFrames:YES];
- 
-    // set up buffering
-    [videoDataOutput setSampleBufferDelegate:self queue:processImageQueue];
-    // The video data is put into a buffer and the class accepts them
-    // Now, something else is acting as the queue for actual storage, this queue here refers to a unint of work. 
-    
-    // <+>
-    // The video is fed out of the camera in sort of graph manner, where the ends of the graph and given to
-    // appropriate sinks based on the type and the conversion is done by apple ?
-    
-    if ([session canAddOutput:videoDataOutput])
-        [session addOutput:videoDataOutput];
-    
-    [[videoDataOutput connectionWithMediaType:AVMediaTypeVideo] setEnabled:YES];
-    
-    [session startRunning];
-    
-    if(error)
-    {
-        UIAlertView *alertView = [[UIAlertView alloc]
-                                  initWithTitle:[NSString stringWithFormat:@"Failed with error %d",
-                                                 (int)[error code]]
-                                  message:[error localizedDescription]
-                                  delegate:nil
-                                  cancelButtonTitle:@"Dismiss"
-                                  otherButtonTitles:nil];
-        
-        [alertView show];
-    }
-     
-
-}
-
-
--(void) analyzeWithCom:(void (^)(void))block
-{
-    // Now analyze the image in front of us
-    analyzeCurrentFrame = true;
-   
-    // processImag is a serial queue, so this block gets executed at the end ?
-    // but why is it a seiral quue ?
-    dispatch_group_notify(processImageGroup ,
-                          
-      dispatch_get_main_queue(),
-      ^{
-          block(); // in the block , access the array from the data source
-      });
-
-}
-
-/**
-    We do not want each image that is output from the video to be analyzed. 
-    We only want to do this , when a timer goes off and the data source is said to analyze the scene
-
-    // this function is called repeatedly by the video camera ?
- 
- @param captureOutput <#captureOutput description#>
- @param sampleBuffer <#sampleBuffer description#>
- @param connection <#connection description#>
- */
-- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
-{
-    // the buffering is done within the image process queue
-   
-    
-    if(analyzeCurrentFrame)
-    {
-
-        // so now enter the group
-        // Note : we add the block to the group only when work is to be done in this block
-        // and leave the group when the work has been done, there by allowing the group notificatoin to fire,
-        // helping up refresh the UI.
-        NSLog(@"Entering block");
-        dispatch_group_enter(processImageGroup);
-   
-        analyzeCurrentFrame = false;
-    
-        CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer); // get the image from the buffer
-        
-        [self runCNNOnFrame:pixelBuffer]; // run the cnn created from the graph
-        
-        
-    }
-
-}
-
-
 
 // Runs Dp on the machine
 - (void)runCNNOnFrame:(CVPixelBufferRef)pixelBuffer
@@ -341,11 +203,8 @@ std::vector<std::string> labels;
     }
 }
 
-
-
 /*
  Obtain the prediction from the cnn and update the items with some decay ?
- 
  */
 - (void)setPredictionValues:(NSDictionary *)newValues
 {
@@ -409,64 +268,6 @@ std::vector<std::string> labels;
     // the sortedLabels are the results that we will show in the collection view .. So Now the group has stopped
     self.classes = sortedLabels;
     
-    
-    // the processing done in the process image is completed, hence we leave the group
-    NSLog(@"Leave block");
-    dispatch_group_leave(processImageGroup);
-
 }
 
-/*
-/**
-    TO DO : 
-        Try to use the IBM Watson servers to get the prediction
-
- @param img The pixel buffer to be used for the recognition
--(void)ibmPOSTRequestWithImage:(CVPixelBufferRef)img
-{
-    // convert CIimage to png
-    CVPixelBufferLockBaseAddress(img, 0);
-    UIImage * uiImg = [[UIImage alloc] initWithCIImage:[CIImage imageWithCVPixelBuffer:img]];
-    CVPixelBufferUnlockBaseAddress(img, 0);
-    NSData * png = UIImageJPEGRepresentation(uiImg , 1 );
- 
-    NSError *error;
-    NSString * apiKey = @"159c911f68849fe107dbe8bf1e965980e750645d";
-    
-    
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *sessionUrl = [NSURLSession sessionWithConfiguration:configuration];
-    
-    NSURL *url = [NSURL URLWithString:@"https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify"];
-    
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
-                                                           cachePolicy:NSURLRequestUseProtocolCachePolicy
-                                                       timeoutInterval:60.0];
-    
-    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request addValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    
-    [request setHTTPMethod:@"POST"];
-    
-    NSDictionary *mapData = [[NSDictionary alloc] initWithObjectsAndKeys: @"api_key", apiKey ,
-                             @"image_file", png,
-                             nil];
-    
-    NSData *postData = [NSJSONSerialization dataWithJSONObject:mapData options:0 error:&error];
-    [request setHTTPBody:postData];
-    
-    
-    NSURLSessionDataTask *postDataTask = [sessionUrl dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
-    {
-        NSLog(@"%@" ,data);
-        NSLog(@"%@" ,error);
-       
-    }];
-    
-    [postDataTask resume];
-    
-    
-    
-}
-*/
 @end

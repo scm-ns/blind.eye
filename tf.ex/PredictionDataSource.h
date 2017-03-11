@@ -48,30 +48,17 @@
  */
 @interface PredictionDataSource : NSObject <AVCaptureVideoDataOutputSampleBufferDelegate>
 {
-    // To manage the camera interface
-    dispatch_queue_t videoProcessingQueue;
-    AVCaptureSession * session;
-    AVCaptureStillImageOutput *stillImageOutput;
-    AVCaptureVideoDataOutput *videoDataOutput;
-    dispatch_queue_t processImageQueue;
-    dispatch_group_t processImageGroup;
     
     // To store the data variables
     NSMutableDictionary *oldPredictionValues;
     NSMutableArray *labelLayers;
-
     
     bool analyzeCurrentFrame; ; // this should be false , and is set to be true only when the data needs to be analyzed
 }
 
--(void)setup ; // Call set up before doing anything else
+// Do the processing part
+- (void)runCNNOnFrame:(CVPixelBufferRef)pixelBuffer;
 
-/*
-    async function. Will return immediately, but the work will be done in the background and on completion the
-    completion block will be called on the main thread. Only do UI task in the blcok
- 
- */
--(void)analyzeWithCom: (void(^)(void))block ; 
 // Holds the sorted classes , which we will be showing in the collection view
 @property (nonatomic) NSArray * classes;
 

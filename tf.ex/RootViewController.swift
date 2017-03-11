@@ -27,7 +27,8 @@ import UIKit
  
  */
 
-class RootViewController: UIViewController {
+class RootViewController: UIViewController , cameraDataPipe
+{
 
     private let cameraPreviewLayer : AVCaptureVideoPreviewLayer
     private var cameraPreviewView : UIView? = nil
@@ -38,8 +39,8 @@ class RootViewController: UIViewController {
         blurView.autoresizingMask = [.flexibleWidth , .flexibleHeight]
         return blurView
     }()
-    private lazy var mainVC: MainVC = MainVC()
     
+    private lazy var mainVC: MainVC = MainVC()
     
     init(cameraImageLayer : AVCaptureVideoPreviewLayer)
     {
@@ -113,16 +114,21 @@ class RootViewController: UIViewController {
         // set up the preview and blur
         self.setupCameraPreview()
         self.setupBlurAboveCameraPreview()
-        //self.setupMainVC()
+        self.setupMainVC()
         
         
         self.view.addSubview(self.blurOverLay)
     }
    
     
-    
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder)
+    {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func pipePixelBuffer(pixelBuff: CVPixelBuffer)
+    {
+        self.mainVC.pipePixelBuffer(pixelBuff: pixelBuff)
     }
     
     
