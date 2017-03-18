@@ -165,8 +165,8 @@ final class RootCoordinator : NSObject ,AVCaptureVideoDataOutputSampleBufferDele
         }
        
         videoOutput.connection(withMediaType: AVMediaTypeVideo)
+        
         self.captureSession.commitConfiguration()
-   
         self.captureSession.startRunning()
         
         self.cameraDataPropogationTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.shouldPropogate), userInfo: nil, repeats: true)

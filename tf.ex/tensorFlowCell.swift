@@ -21,7 +21,7 @@ class tensorFlowCell : UICollectionViewCell , cellProtocol , cameraDataPipe
         // resize using autolayout
         let colView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         colView.translatesAutoresizingMaskIntoConstraints = false
-        colView.backgroundView?.backgroundColor = UIColor.white
+        colView.backgroundColor = UIColor.clear
         colView.register(outputCell.self, forCellWithReuseIdentifier: outputCell.cell_identifier)
         return colView
     }()
@@ -46,7 +46,7 @@ class tensorFlowCell : UICollectionViewCell , cellProtocol , cameraDataPipe
     
     private func setupViews()
     {
-        self.contentView.backgroundColor = UIColor.purple
+        self.addBorder()
         self.addSubview(self.collectionView)
         
        // setup the collection view
@@ -58,7 +58,25 @@ class tensorFlowCell : UICollectionViewCell , cellProtocol , cameraDataPipe
        
         NSLayoutConstraint.activate(constraints)
     }
-   
+  
+    private func addBorder()
+    {
+        let view = self.contentView
+         // border radius
+        view.layer.cornerRadius = 30.0
+        // border
+        view.layer.borderColor = UIColor.lightGray.cgColor
+        view.layer.borderWidth = 1.5;
+        
+        // drop shadow
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.8
+        view.layer.shadowRadius = 3.0
+        view.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
+        
+        
+    }
+    
     func pipePixelBuffer(pixelBuff: CVPixelBuffer)
     {
         self.ds?.processPixelBuffer(pixelBuff: pixelBuff)
