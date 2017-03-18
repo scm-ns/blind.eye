@@ -41,14 +41,20 @@ class RootViewController: UIViewController , cameraDataPipe
     }()
     
     private lazy var mainVC: MainVC = MainVC()
+   
+    private var propogationControllerButton: UIButton? = nil
+ 
+    fileprivate var propogationControl : cameraDataPropogationControl? // used by extension
     
-    init(cameraImageLayer : AVCaptureVideoPreviewLayer)
+    
+    init(cameraImageLayer : AVCaptureVideoPreviewLayer )
     {
        self.cameraPreviewLayer = cameraImageLayer
-        
        super.init(nibName: nil, bundle: nil)
     }
-   
+
+    
+    
     // Add the camera video input layer to the view of the VC
     func setupCameraPreview()
     {
@@ -69,13 +75,42 @@ class RootViewController: UIViewController , cameraDataPipe
                // After core implementation try to improve this
               
                self.blurOverLay.frame = self.view.bounds
-                
-               let button =  UIView(frame: CGRect(x: self.view.bounds.width/2 - 20 , y: 30, width: 40, height: 40))
-               button.backgroundColor = UIColor.red
-               self.blurOverLay.contentView.addSubview(button)
+            
+               // Add button to control propogation
+               self.propogationControllerButton = UIButton(frame:CGRect(x: self.view.bounds.width/2 - 20 , y: 30, width: 40, height: 40))
+            
+               self.propogationControllerButton?.backgroundColor = UIColor.red
+               self.propogationControllerButton?.layer.cornerRadius = 20 // corner half of button width and height
+            
+               self.propogationControllerButton?.addTarget(self, action: #selector(self.tooglePropogation), for: .touchUpInside)
+            
+               self.blurOverLay.contentView.addSubview(self.propogationControllerButton!)
         }
     }
-  
+
+     
+    
+    
+    func tooglePropogation()
+    {
+       guard let propogationControl = self.propogationControl else
+       {
+            return
+       }
+        
+       if (propogationControl.isRunning())
+       {
+           self.propogationControllerButton?.backgroundColor = UIColor.black
+           propogationControl.stopPropogation()
+       }
+       else
+       {
+            self.propogationControllerButton?.backgroundColor = UIColor.red
+            propogationControl.restartPropogation()
+       }
+    }
+    
+    
     func setupMainVC()
     {
         // Add Contraints
@@ -132,4 +167,12 @@ class RootViewController: UIViewController , cameraDataPipe
     }
     
     
+}
+
+extension RootViewController : cameraDataPropogationController
+{
+    func configurePropogationController(propCon : cameraDataPropogationControl)
+    {
+        self.propogationControl = propCon
+    }
 }

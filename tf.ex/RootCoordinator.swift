@@ -53,6 +53,26 @@ protocol cameraDataPipe : cameraDataTransport
     func pipePixelBuffer(pixelBuff : CVPixelBuffer)
 }
 
+/*
+        delegate used to control whether the camera data is 
+ 
+*/
+protocol cameraDataPropogationControl
+{
+    func isRunning() -> Bool
+    func stopPropogation()
+    func restartPropogation() // restart and not start as default behaviour is automatic propogation
+}
+
+/*
+    delegate used to configure the class which will control the propogation
+*/
+protocol cameraDataPropogationController
+{
+    func configurePropogationController(propCon : cameraDataPropogationControl)
+}
+
+
 final class RootCoordinator : NSObject ,AVCaptureVideoDataOutputSampleBufferDelegate
 {
     // MARK- Private Variables
@@ -64,7 +84,7 @@ final class RootCoordinator : NSObject ,AVCaptureVideoDataOutputSampleBufferDele
     private let rootVC : UIViewController
     private let window : UIWindow
     
-    private var cameraDataPropogationTimer : Timer? = nil
+    fileprivate var cameraDataPropogationTimer : Timer? = nil // needed in the extension
     private var propogationController : Bool = false
     private var cameraDataTranports : [cameraDataTransport] = []
     
@@ -78,15 +98,22 @@ final class RootCoordinator : NSObject ,AVCaptureVideoDataOutputSampleBufferDele
         self.captureSetupResult = .authorized
         
         // setup VC
-        self.rootVC = RootViewController(cameraImageLayer: self.cameraPreivewLayer)
+        self.rootVC = RootViewController(cameraImageLayer: self.cameraPreivewLayer )
         self.window = window
         
         super.init()
-       
-        self.addTransport(transport: self.rootVC as! cameraDataTransport )
         
-        // set up timer which will propogate the data along the chain
-        self.cameraDataPropogationTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(RootCoordinator.shouldPropogate), userInfo: nil, repeats: true)
+        if let controller = self.rootVC as? cameraDataPropogationController
+        {
+           controller.configurePropogationController(propCon: self)
+        }
+        
+        if let transport = self.rootVC as? cameraDataTransport
+        {
+           self.addTransport(transport: transport)
+        }
+       
+        self.setupPropogationTimer()
        
         // ask for user autorization before using the camera
         switch(AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo))
@@ -126,7 +153,6 @@ final class RootCoordinator : NSObject ,AVCaptureVideoDataOutputSampleBufferDele
         }
         
         self.captureSession.beginConfiguration()
-        
         self.captureSession.sessionPreset = AVCaptureSessionPresetPhoto
        
         // set up the device for capture
@@ -143,8 +169,6 @@ final class RootCoordinator : NSObject ,AVCaptureVideoDataOutputSampleBufferDele
                    self.captureSession.addInput(videoInput)
                 }    
             }
-            
-            
         }
         else
         {
@@ -171,7 +195,11 @@ final class RootCoordinator : NSObject ,AVCaptureVideoDataOutputSampleBufferDele
         
         self.cameraDataPropogationTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.shouldPropogate), userInfo: nil, repeats: true)
     }
-  
+ 
+    /*
+ 
+ 
+    */
     func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!)
     {
             if(self.propogationController)
@@ -238,9 +266,55 @@ final class RootCoordinator : NSObject ,AVCaptureVideoDataOutputSampleBufferDele
         print("app launched")
     }
     
+    
+    func setupPropogationTimer()
+    {
+        // set up timer which will propogate the data along the chain
+        self.cameraDataPropogationTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(RootCoordinator.shouldPropogate), userInfo: nil, repeats: true)
+       
+    }
+    
 }
 
-
-
+/*
+    desc :
+        By default a timer is setup on init and the data is propogated when ever the timer fires.
+ 
+    This protocol conformance allows the caller to decide whether to stop the propogation or restart it
+ 
+ */
+extension RootCoordinator : cameraDataPropogationControl
+{
+    func stopPropogation()
+    {
+       if (self.cameraDataPropogationTimer?.isValid)!
+       {
+            self.cameraDataPropogationTimer?.invalidate() // How to guarantee that the timer is invalidated in the same thread ?
+       }
+       self.cameraDataPropogationTimer = nil
+    }
+    
+    func restartPropogation()
+    {
+        guard self.cameraDataPropogationTimer == nil , self.cameraDataPropogationTimer?.isValid == false else // only recreate the timer if previously removed or invalid
+        {
+           return
+        }
+        self.setupPropogationTimer()
+    }
+  
+    func isRunning() -> Bool
+    {
+        if let timer = self.cameraDataPropogationTimer
+        {
+            return timer.isValid
+        }
+        else
+        {
+            return false
+        }
+    }
+    
+}
 
 
