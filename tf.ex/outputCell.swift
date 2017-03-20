@@ -8,6 +8,10 @@
 
 import UIKit
 
+/*
+    This is a simple cell with a text label in its center
+ 
+ */
 
 class outputCellViewModel
 {
@@ -36,7 +40,8 @@ class outputCell : UICollectionViewCell
         }
     }
    
-    private let label : UILabel = {
+    private let label : UILabel =
+    {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.yellow
@@ -45,8 +50,10 @@ class outputCell : UICollectionViewCell
         return label
     }()
     
-    override init(frame: CGRect) {
+    override init(frame: CGRect)
+    {
         super.init(frame: frame)
+        setupRoundedCorners()
         setupViews()
     }
    
@@ -55,9 +62,35 @@ class outputCell : UICollectionViewCell
     }
     
    
+    private func setupRoundedCorners()
+    {
+        guard self.contentView.bounds.width == self.contentView.bounds.height else
+        {
+            print("Width and height must be equal for rounded corners")
+            return
+        }
+        
+        let view = self.contentView
+         // border radius
+        self.layer.cornerRadius = self.contentView.bounds.width / 2
+        // Make the corner radius half of the width
+        self.layer.masksToBounds = true
+         
+        // border
+        view.layer.borderColor = UIColor.red.cgColor
+        view.layer.borderWidth = 0.2;
+        
+        // drop shadow
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.1
+        view.layer.shadowRadius = 2.0
+        view.layer.shadowOpacity = 0.5
+        view.layer.shadowOffset = CGSize(width: 1.0, height: 1.0)
+    }
+    
     private func setupViews()
     {
-        self.contentView.backgroundColor = UIColor.purple
+        self.contentView.backgroundColor = UIColor.clear
         self.contentView.addSubview(self.label)
         
         let viewMapping : [String : AnyObject] = ["v0" : self.label]
