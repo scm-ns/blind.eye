@@ -4,9 +4,13 @@ Done :
 	Simple integration of tensorflow into an ios app.
 	Use Nuance api to speak to user
 	Design very simple and stupid UI
+	Remove dependence on Nuance. Use Apple or roll my own. 	
+		Use apple TTS system
 
 To Do:
-	Remove dependence on Nuance. Use Apple or roll my own
+	Work on creating a better UI.
+	Work on making sure that pipeline is working properly as there are laggs as well as poor accuracy compared to google's code
+
 	Transfer learn the network on more relevant objects.
 		Currently the model is trained on image net and it is not relevant enough for home usage.
 	Add Face detection and remember feature
