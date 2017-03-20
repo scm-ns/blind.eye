@@ -44,6 +44,7 @@ final class RootCoordinator : NSObject , cameraDataSource
     private let rootVC : UIViewController
     private let window : UIWindow
     
+    fileprivate let speechSynth : AVSpeechSynthesizer
     fileprivate var cameraDataPropogationTimer : Timer? = nil // needed in the extension
     fileprivate var propogationController : Bool = false
     var cameraDataTranports : [cameraDataTransport] = []
@@ -60,6 +61,9 @@ final class RootCoordinator : NSObject , cameraDataSource
         // setup VC
         self.rootVC = RootViewController(cameraImageLayer: self.cameraPreivewLayer )
         self.window = window
+      
+        // Setup speech support
+        self.speechSynth = AVSpeechSynthesizer()
         
         super.init()
         
@@ -330,9 +334,15 @@ extension RootCoordinator : soundDataSink
 {
     func processSound(str : String)
     {
-       // The words are going to be kept in a buffer. 
-       // Periodically data will be read from the buffer 
+       // The words are going to be kept in a buffer.
+       // Periodically data will be read from the buffer
        print(" SOUND DATA AVALIBALE : \(str)")
+        
+       let utter = AVSpeechUtterance(string: str)
+        utter.rate = 0.25
+        utter.pitchMultiplier = 0.25
+        utter.volume = 0.75
+        self.speechSynth.speak(utter)
     }
 }
 
