@@ -330,6 +330,8 @@ extension RootCoordinator : soundDataSink
 {
     func processSound(str : String)
     {
+       // The words are going to be kept in a buffer. 
+       // Periodically data will be read from the buffer 
        print(" SOUND DATA AVALIBALE : \(str)")
     }
 }

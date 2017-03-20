@@ -118,16 +118,7 @@ extension tensorFlowDataSource : UICollectionViewDelegate
         {
             cell.backgroundColor = UIColor.cyan
         }
-       
-        // now speak the item
-        if let str = cell.viewModel?.labelStr
-        {
-           // TO DO : Create seperate thread
-            DispatchQueue.global(qos: .userInitiated).async
-            {
-               self.propogateSound(str: str)
-            }
-        }
+      
     }
     
    
@@ -192,6 +183,17 @@ extension tensorFlowDataSource : UICollectionViewDataSource
         
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: outputCell.cell_identifier, for: indexPath) as! outputCell
             cell.viewModel = viewModel
+       
+        
+            // now speak the item
+            if let str = cell.viewModel?.labelStr
+            {
+               // TO DO : Create seperate thread
+                DispatchQueue.global(qos: .userInitiated).async
+                {
+                   self.propogateSound(str: str)
+                }
+            }
         
             return cell
     }

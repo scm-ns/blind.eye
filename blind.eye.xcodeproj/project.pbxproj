@@ -19,7 +19,6 @@
 		361F99AE1DE0E81600EEAD20 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 361F99AD1DE0E81600EEAD20 /* AVFoundation.framework */; };
 		362DA5EC1E67202E006B17B3 /* common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362DA5EB1E67202E006B17B3 /* common.swift */; };
 		3652C3291E72C70000FAAC17 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3652C3281E72C70000FAAC17 /* RootViewController.swift */; };
-		369A34F81E7D2CEA008D3D2B /* faceDetectorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 369A34F71E7D2CEA008D3D2B /* faceDetectorCell.swift */; };
 		369A34FA1E7FC9BA008D3D2B /* CommonProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 369A34F91E7FC9BA008D3D2B /* CommonProtocols.swift */; };
 		369A34FC1E7FE160008D3D2B /* MainDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 369A34FB1E7FE160008D3D2B /* MainDataSource.swift */; };
 		36A348B31E243A250062E21D /* imagenet_comp_graph_label_strings.txt in Resources */ = {isa = PBXBuildFile; fileRef = 36A348B21E243A250062E21D /* imagenet_comp_graph_label_strings.txt */; };
@@ -243,7 +242,6 @@
 				36F8203D1DE0A991005DEC05 /* tensorflow_utils.mm in Sources */,
 				36F820431DE0B397005DEC05 /* MainViewController.swift in Sources */,
 				36A71CA31E723C62008EC8F7 /* RootCoordinator.swift in Sources */,
-				369A34F81E7D2CEA008D3D2B /* faceDetectorCell.swift in Sources */,
 				361F99861DDFDB3D00EEAD20 /* main.m in Sources */,
 				369A34FC1E7FE160008D3D2B /* MainDataSource.swift in Sources */,
 			);

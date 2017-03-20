@@ -21,7 +21,7 @@ import CoreImage
     But since I am not writing to it, I should be able to use it from multiple threads.
  
  */
-class faceDetectorCell : UICollectionViewCell , cellProtocol , cameraDataPipe
+class faceDetectorCell : UICollectionViewCell , cellProtocol , cameraData
 {
     static var cell_identifer : String = "faceDetectorCell"
     

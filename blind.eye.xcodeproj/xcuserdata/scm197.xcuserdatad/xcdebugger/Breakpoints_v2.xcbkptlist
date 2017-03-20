@@ -178,31 +178,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "tf.ex/common.swift"
-            timestampString = "511685975.283795"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "52"
-            endingLineNumber = "52"
-            landmarkName = "cellRegistrar"
-            landmarkType = "3">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/RootCoordinator.swift"
-            timestampString = "511685975.283795"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "119"
-            endingLineNumber = "119"
+            startingLineNumber = "85"
+            endingLineNumber = "85"
             landmarkName = "init(window:)"
             landmarkType = "7">
             <Locations>
@@ -246,11 +230,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/MainViewController.swift"
-            timestampString = "511687983.479662"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "68"
-            endingLineNumber = "68"
+            startingLineNumber = "75"
+            endingLineNumber = "75"
             landmarkName = "viewDidAppear(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -262,11 +246,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/MainViewController.swift"
-            timestampString = "511687983.479662"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "69"
-            endingLineNumber = "69"
+            startingLineNumber = "76"
+            endingLineNumber = "76"
             landmarkName = "viewDidAppear(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -278,11 +262,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/MainViewController.swift"
-            timestampString = "511687983.479662"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "71"
-            endingLineNumber = "71"
+            startingLineNumber = "78"
+            endingLineNumber = "78"
             landmarkName = "viewDidAppear(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -294,11 +278,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/MainViewController.swift"
-            timestampString = "511687983.479662"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "74"
-            endingLineNumber = "74"
+            startingLineNumber = "81"
+            endingLineNumber = "81"
             landmarkName = "viewDidAppear(_:)"
             landmarkType = "7">
             <Locations>
@@ -310,11 +294,11 @@
                   moduleName = "blind.eye"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/scm197/dev/tf.ex/tf.ex/MainViewController.swift"
-                  timestampString = "511687326.03078"
+                  timestampString = "511700450.815931"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "73"
-                  endingLineNumber = "73"
+                  startingLineNumber = "82"
+                  endingLineNumber = "82"
                   offsetFromSymbolStart = "376">
                </Location>
                <Location
@@ -325,11 +309,11 @@
                   moduleName = "blind.eye"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/scm197/dev/tf.ex/tf.ex/MainViewController.swift"
-                  timestampString = "511687326.035186"
+                  timestampString = "511700450.820092"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "75"
-                  endingLineNumber = "75"
+                  startingLineNumber = "84"
+                  endingLineNumber = "84"
                   offsetFromSymbolStart = "20">
                </Location>
             </Locations>
@@ -342,11 +326,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/MainViewController.swift"
-            timestampString = "511687983.479662"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "86"
-            endingLineNumber = "86"
+            startingLineNumber = "93"
+            endingLineNumber = "93"
             landmarkName = "setupView()"
             landmarkType = "7">
          </BreakpointContent>
@@ -358,11 +342,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/RootCoordinator.swift"
-            timestampString = "511687176.453174"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "351"
-            endingLineNumber = "351">
+            startingLineNumber = "339"
+            endingLineNumber = "339">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -372,11 +356,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/RootCoordinator.swift"
-            timestampString = "511687176.453174"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "356"
-            endingLineNumber = "356">
+            startingLineNumber = "344"
+            endingLineNumber = "344">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -386,11 +370,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/RootCoordinator.swift"
-            timestampString = "511687176.453174"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "358"
-            endingLineNumber = "358">
+            startingLineNumber = "346"
+            endingLineNumber = "346">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -400,11 +384,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/RootCoordinator.swift"
-            timestampString = "511687176.453174"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "357"
-            endingLineNumber = "357">
+            startingLineNumber = "345"
+            endingLineNumber = "345">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -414,11 +398,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/tensorFlowCell.swift"
-            timestampString = "511685975.283795"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "37"
-            endingLineNumber = "37"
+            startingLineNumber = "43"
+            endingLineNumber = "43"
             landmarkName = "init(frame:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -430,11 +414,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/RootCoordinator.swift"
-            timestampString = "511687176.453174"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "318"
-            endingLineNumber = "318"
+            startingLineNumber = "269"
+            endingLineNumber = "269"
             landmarkName = "stopPropogation()"
             landmarkType = "7">
          </BreakpointContent>
@@ -446,11 +430,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/RootViewController.swift"
-            timestampString = "511686075.127033"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "134"
-            endingLineNumber = "134"
+            startingLineNumber = "140"
+            endingLineNumber = "140"
             landmarkName = "tooglePropogation()"
             landmarkType = "7">
          </BreakpointContent>
@@ -462,11 +446,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/RootViewController.swift"
-            timestampString = "511686075.86327"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "135"
-            endingLineNumber = "135"
+            startingLineNumber = "141"
+            endingLineNumber = "141"
             landmarkName = "tooglePropogation()"
             landmarkType = "7">
          </BreakpointContent>
@@ -478,11 +462,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/RootViewController.swift"
-            timestampString = "511686515.613333"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "139"
-            endingLineNumber = "139"
+            startingLineNumber = "145"
+            endingLineNumber = "145"
             landmarkName = "tooglePropogation()"
             landmarkType = "7">
          </BreakpointContent>
@@ -494,11 +478,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/RootCoordinator.swift"
-            timestampString = "511687176.453174"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "336"
-            endingLineNumber = "336"
+            startingLineNumber = "287"
+            endingLineNumber = "287"
             landmarkName = "isRunning()"
             landmarkType = "7">
          </BreakpointContent>
@@ -510,11 +494,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/RootCoordinator.swift"
-            timestampString = "511687176.453174"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "337"
-            endingLineNumber = "337"
+            startingLineNumber = "288"
+            endingLineNumber = "288"
             landmarkName = "isRunning()"
             landmarkType = "7">
          </BreakpointContent>
@@ -526,11 +510,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/RootCoordinator.swift"
-            timestampString = "511687176.453174"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "335"
-            endingLineNumber = "335"
+            startingLineNumber = "286"
+            endingLineNumber = "286"
             landmarkName = "isRunning()"
             landmarkType = "7">
          </BreakpointContent>
@@ -542,11 +526,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/RootCoordinator.swift"
-            timestampString = "511687176.453174"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "338"
-            endingLineNumber = "338"
+            startingLineNumber = "289"
+            endingLineNumber = "289"
             landmarkName = "isRunning()"
             landmarkType = "7">
          </BreakpointContent>
@@ -558,11 +542,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/RootCoordinator.swift"
-            timestampString = "511687176.453174"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "339"
-            endingLineNumber = "339"
+            startingLineNumber = "290"
+            endingLineNumber = "290"
             landmarkName = "isRunning()"
             landmarkType = "7">
          </BreakpointContent>
@@ -574,11 +558,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/RootCoordinator.swift"
-            timestampString = "511687176.453174"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "342"
-            endingLineNumber = "342"
+            startingLineNumber = "293"
+            endingLineNumber = "293"
             landmarkName = "isRunning()"
             landmarkType = "7">
          </BreakpointContent>
@@ -590,11 +574,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/RootCoordinator.swift"
-            timestampString = "511687176.453174"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "343"
-            endingLineNumber = "343"
+            startingLineNumber = "294"
+            endingLineNumber = "294"
             landmarkName = "isRunning()"
             landmarkType = "7">
          </BreakpointContent>
@@ -606,11 +590,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/RootCoordinator.swift"
-            timestampString = "511687176.453174"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "341"
-            endingLineNumber = "341"
+            startingLineNumber = "292"
+            endingLineNumber = "292"
             landmarkName = "isRunning()"
             landmarkType = "7">
          </BreakpointContent>
@@ -622,11 +606,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/RootCoordinator.swift"
-            timestampString = "511686817.198499"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "233"
-            endingLineNumber = "233"
+            startingLineNumber = "127"
+            endingLineNumber = "127"
             landmarkName = "shouldPropogate()"
             landmarkType = "7">
          </BreakpointContent>
@@ -638,11 +622,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/RootViewController.swift"
-            timestampString = "511687240.454526"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "148"
-            endingLineNumber = "148"
+            startingLineNumber = "154"
+            endingLineNumber = "154"
             landmarkName = "tooglePropogation()"
             landmarkType = "7">
          </BreakpointContent>
@@ -654,13 +638,29 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tf.ex/tensorFlowCell.swift"
-            timestampString = "511699312.603687"
+            timestampString = "511700449.58651"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "125"
-            endingLineNumber = "125"
+            startingLineNumber = "120"
+            endingLineNumber = "120"
             landmarkName = "tensorFlowCell"
             landmarkType = "4">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "tf.ex/RootCoordinator.swift"
+            timestampString = "511700392.827853"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "333"
+            endingLineNumber = "333"
+            landmarkName = "processSound(str:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
