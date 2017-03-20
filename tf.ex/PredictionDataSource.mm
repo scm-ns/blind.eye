@@ -99,8 +99,14 @@ std::vector<std::string> labels;
     
 }
 
+/*
+    When I work on the pixelBuffer I cannot access it from other threads ?
+        Or is the concept something else. I can access it from other threads but only on the CPU side. 
+        The buffer is located on the GPU side.
+ 
+ */
 // Runs Dp on the machine
-- (void)runCNNOnFrame:(CVPixelBufferRef)pixelBuffer
+- (void)runCNNOnFrame:(CVPixelBufferRef)pixelBuffer // We are acting directly on the buffer. Is there a better way here. 
 {
     assert(pixelBuffer != NULL);
     
