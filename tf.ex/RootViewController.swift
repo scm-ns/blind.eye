@@ -55,6 +55,7 @@ class RootViewController: UIViewController
     fileprivate var propogationControl : cameraDataPropogationControl? // used by extension
   
     var cameraDataTranports: [cameraDataTransport] = [] // cameraDataPipe Protocol
+    var soundDataTransports: [soundDataTransport] = [] // soundPipe Protocol
     
     init(cameraImageLayer : AVCaptureVideoPreviewLayer )
     {
@@ -72,6 +73,9 @@ class RootViewController: UIViewController
         self.setupMainVC()
        
         self.addCameraTransport(transport: self.mainVC as cameraDataTransport)
+       
+        self.mainVC.addSoundTransport(transport: self as soundDataTransport)
+        
         
         self.view.addSubview(self.blurOverLay)
     }
@@ -218,6 +222,39 @@ extension RootViewController : cameraDataPipe
        self.cameraDataTranports.append(transport)
     }
 }
+
+
+
+extension RootViewController : soundDataPipe
+{
+    func pipeSound(str : String)
+    {
+        for transport in self.soundDataTransports
+        {
+            if let sink = transport as? soundDataSink
+            {
+                sink.processSound(str: str)
+                print("Layer 1 Sink : Sound Propogation Complete")
+            }
+            else if let pipe = transport as? soundDataPipe
+            {
+                pipe.pipeSound(str: str)
+                print("Layer 1 Pipe : Sound Propogation Complete")
+            }
+            else
+            {
+                print("Layer 1 : Sound Propogation Failed")
+            }
+        }
+    }
+    
+    func addSoundTransport(transport : soundDataTransport)
+    {
+        self.soundDataTransports.append(transport)
+    }
+}
+
+
 
 // get access to delegate, through which the propogation of data can be controller
 extension RootViewController : cameraDataPropogationController

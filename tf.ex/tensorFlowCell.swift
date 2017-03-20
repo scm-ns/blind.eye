@@ -26,11 +26,10 @@ class tensorFlowCell : UICollectionViewCell , cellProtocol
     }()
   
     fileprivate var ds : tensorFlowDataSource!
-   
-    fileprivate var soundTransport : soundDataTransport? = nil
     
     var cameraDataTranports: [cameraDataTransport] = [] // cameraDataPipe Protocol
-   
+    var soundDataTransports: [soundDataTransport] = [] // soundPipe Protocol
+    
     override init(frame: CGRect)
     {
        super.init(frame: frame)
@@ -43,12 +42,7 @@ class tensorFlowCell : UICollectionViewCell , cellProtocol
        self.collectionView.dataSource = ds
        self.collectionView.delegate = ds
     }
-   
-    func setTransport(transport : soundDataTransport)
-    {
-        self.soundTransport = transport
-    }
-    
+  
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -127,25 +121,27 @@ extension tensorFlowCell : soundDataPipe
 {
     func pipeSound(str : String)
     {
-        guard let transport = self.soundTransport else
+        for transport in self.soundDataTransports
         {
-           return
+            if let sink = transport as? soundDataSink
+            {
+               sink.processSound(str: str)
+               print("Layer 1 Sink : Sound Propogation Complete")
+            }
+            else if let pipe = transport as? soundDataPipe
+            {
+                pipe.pipeSound(str: str)
+                print("Layer 1 Pipe : Sound Propogation Complete")
+            }
+            else
+            {
+                print("Layer 1 : Sound Propogation Failed")
+            }
         }
-       
-        if let sink = transport as? soundDataSink
-        {
-           sink.processSound(str: str)
-           print("Layer 1 Sink : Sound Propogation Complete")
-        }
-        else if let pipe = transport as? soundDataPipe
-        {
-            pipe.pipeSound(str: str)
-            print("Layer 1 Pipe : Sound Propogation Complete")
-        }
-        else
-        {
-            
-            print("Layer 1 : Sound Propogation Failed")
-        }
+    }
+    
+    func addSoundTransport(transport : soundDataTransport)
+    {
+       self.soundDataTransports.append(transport)
     }
 }

@@ -20,13 +20,15 @@ class mainDataSource: NSObject, UICollectionViewDataSource , UICollectionViewDel
     private let colView : UICollectionView // TODO : Coupling between the data Source and VC. Break them out
     
     var cameraDataTranports: [cameraDataTransport] = [] // cameraDataPipe Protocol
+    var soundDataTransports: [soundDataTransport] = [] // soundPipe Protocol
     
-    init(colView : UICollectionView)
+    init(colView : UICollectionView , soundDataCarrier : soundDataTransport)
     {
         self.colView = colView
         super.init()
         cellSource.registerCell(cell:tensorFlowCell.self as cellProtocol.Type )
         cellSource.configColView(colView: colView)
+        self.addSoundTransport(transport: soundDataCarrier)
     }
    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -41,12 +43,20 @@ class mainDataSource: NSObject, UICollectionViewDataSource , UICollectionViewDel
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
     {
         let cell_identifier = cellSource.itemAtIndex(index: indexPath.row).cell_identifer
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cell_identifier,for: indexPath)  as! cameraDataPipe
-      
-        // pass on data
-        self.addCameraTransport(transport: cell)
-
-        return cell as! UICollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cell_identifier,for: indexPath)
+        
+        if let cell_cam = cell as?  cameraDataPipe
+        {
+            // pass on data
+            self.addCameraTransport(transport: cell_cam )
+        }
+       
+        if let cell_sound = cell as? soundDataPipe
+        {
+           cell_sound.addSoundTransport(transport: self as soundDataTransport)
+        }
+        
+        return cell 
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
@@ -99,4 +109,32 @@ extension mainDataSource: cameraDataPipe
 
 
 
+extension mainDataSource : soundDataPipe
+{
+    func pipeSound(str : String)
+    {
+        for transport in self.soundDataTransports
+        {
+            if let sink = transport as? soundDataSink
+            {
+                sink.processSound(str: str)
+                print("Layer 1 Sink : Sound Propogation Complete")
+            }
+            else if let pipe = transport as? soundDataPipe
+            {
+                pipe.pipeSound(str: str)
+                print("Layer 1 Pipe : Sound Propogation Complete")
+            }
+            else
+            {
+                print("Layer 1 : Sound Propogation Failed")
+            }
+        }
+    }
+    
+    func addSoundTransport(transport : soundDataTransport)
+    {
+        self.soundDataTransports.append(transport)
+    }
+}
 

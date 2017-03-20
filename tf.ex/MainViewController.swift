@@ -39,6 +39,7 @@ class MainVC : UIViewController
     private var ds: mainDataSource! = nil
     
     var cameraDataTranports: [cameraDataTransport] = [] // cameraDataPipe Protocol
+    var soundDataTransports: [soundDataTransport] = [] // soundPipe Protocol
     
     // MARK -: Initialization
     init()
@@ -47,7 +48,8 @@ class MainVC : UIViewController
         print(self.view)
         self.view.backgroundColor = UIColor.clear
         
-        self.ds = mainDataSource(colView: self.mainCollectionView)
+        self.ds = mainDataSource(colView: self.mainCollectionView ,soundDataCarrier: self as soundDataTransport)
+        
         self.mainCollectionView.dataSource = self.ds
         self.mainCollectionView.delegate = self.ds
         
@@ -133,5 +135,32 @@ extension MainVC: cameraDataPipe
 }
 
 
-
+extension MainVC : soundDataPipe
+{
+    func pipeSound(str : String)
+    {
+        for transport in self.soundDataTransports
+        {
+            if let sink = transport as? soundDataSink
+            {
+                sink.processSound(str: str)
+                print("Layer 1 Sink : Sound Propogation Complete")
+            }
+            else if let pipe = transport as? soundDataPipe
+            {
+                pipe.pipeSound(str: str)
+                print("Layer 1 Pipe : Sound Propogation Complete")
+            }
+            else
+            {
+                print("Layer 1 : Sound Propogation Failed")
+            }
+        }
+    }
+    
+    func addSoundTransport(transport : soundDataTransport)
+    {
+        self.soundDataTransports.append(transport)
+    }
+}
 

@@ -68,11 +68,17 @@ final class RootCoordinator : NSObject , cameraDataSource
            controller.configurePropogationController(propCon: self)
         }
         
-        if let transport = self.rootVC as? cameraDataTransport
+        if let cam_transport = self.rootVC as? cameraDataTransport
         {
-           self.addCameraTransport(transport: transport)
+           self.addCameraTransport(transport: cam_transport)
         }
-       
+      
+        if let sound_transport = self.rootVC as? soundDataPipe
+        {
+            sound_transport.addSoundTransport(transport: self as soundDataSink)
+        }
+        
+
         self.setupPropogationTimer()
        
         // ask for user autorization before using the camera
@@ -319,3 +325,12 @@ extension RootCoordinator : AVCaptureVideoDataOutputSampleBufferDelegate
             }
     }
 }
+
+extension RootCoordinator : soundDataSink
+{
+    func processSound(str : String)
+    {
+       print(" SOUND DATA AVALIBALE : \(str)")
+    }
+}
+

@@ -83,6 +83,8 @@ protocol soundDataSink : soundDataTransport
 
 protocol soundDataPipe : soundDataTransport
 {
+    var soundDataTransports: [soundDataTransport] {get set}
+    func addSoundTransport(transport : soundDataTransport)
     func pipeSound(str : String)
 }
 

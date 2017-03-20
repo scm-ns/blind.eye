@@ -18,7 +18,7 @@ import UIKit
  */
 
 
-class tensorFlowDataSource : NSObject ,soundDataSource
+class tensorFlowDataSource : NSObject
 {
     // this has to be some sort of delegate that is implmented.
     /// I need to create a protocl which can handle the talking between the machien learning part and the data soruce part
@@ -28,8 +28,6 @@ class tensorFlowDataSource : NSObject ,soundDataSource
     // the collection view has be reloated when the prediction data source has completed functioning.
     // I need the timer to be part of the data source and not the view controller.
     // The best way to do this , is by using a reference ot the vc and called reload of it when the data has been laoded
-  
-    
     
     fileprivate let ds : PredictionDataSource
     fileprivate let colView : UICollectionView
@@ -58,8 +56,11 @@ class tensorFlowDataSource : NSObject ,soundDataSource
         // add the carrier to the transports
         self.addSoundTransport(transport: soundDataCarrier)
     }
-   
     
+}
+
+extension tensorFlowDataSource : soundDataSource
+{
     func propogateSound(str : String)
     {
         for transport in soundDataTransports
@@ -85,7 +86,6 @@ class tensorFlowDataSource : NSObject ,soundDataSource
     {
         soundDataTransports.append(transport)
     }
-    
 }
 
 extension tensorFlowDataSource : UICollectionViewDelegateFlowLayout
