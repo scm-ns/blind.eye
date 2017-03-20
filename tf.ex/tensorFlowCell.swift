@@ -13,7 +13,6 @@ import AVFoundation
 class tensorFlowCell : UICollectionViewCell , cellProtocol , cameraDataPipe
 {
     static var cell_identifer: String = "tensorFlowCell"
-
     
     let collectionView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -30,8 +29,6 @@ class tensorFlowCell : UICollectionViewCell , cellProtocol , cameraDataPipe
     
     override init(frame: CGRect)
     {
-       //speechSynth = AVSpeechSynthesizer()
-        
        super.init(frame: frame)
         
        setupViews()
@@ -64,6 +61,7 @@ class tensorFlowCell : UICollectionViewCell , cellProtocol , cameraDataPipe
         let view = self.contentView
          // border radius
         view.layer.cornerRadius = 30.0
+        
         // border
         view.layer.borderColor = UIColor.lightGray.cgColor
         view.layer.borderWidth = 1.5;

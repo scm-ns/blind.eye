@@ -13,25 +13,32 @@ import UIKit
             // TODO : Use protocols to uncouple
  
     Will have a capure in progress button at the top
-    
-    Will be more like a container view controller. 
+    Will be more like a container view controller.
         >> Good way to present and unpresetn view controllers ?? 
  
  */
 
 /*
+    Will have different UI Elements :
+        A red Button at the top to control whether to propogate the data or not
+        May be an UILabel at the botton which tells about the current state that the app is in.
+        Whether recording or not recording
  
-    What will be the different UI Elements
-    A red Button at the top
- 
- 
+        A complex UI element from the buttom to show information and give proper attribution
  */
 
-class RootViewController: UIViewController , cameraDataPipe
+/*
+    Pipe Architecture :
+        This class acts as a pipe which will transmit camera data to other objects
+*/
+
+class RootViewController: UIViewController
 {
 
     private let cameraPreviewLayer : AVCaptureVideoPreviewLayer
     private var cameraPreviewView : UIView? = nil
+    fileprivate let mainVC: MainVC = MainVC()
+    private var propogationControllerButton: UIButton? = nil
     private lazy var blurOverLay : UIVisualEffectView =
     {
         let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.light)
@@ -40,10 +47,11 @@ class RootViewController: UIViewController , cameraDataPipe
         return blurView
     }()
     
-    private lazy var mainVC: MainVC = MainVC()
-   
-    private var propogationControllerButton: UIButton? = nil
- 
+    /*
+        The feeding of data through the pipe is controlled by this 
+        delegate.
+        Gives us a option to control the flow through ( start and stop ) and query the state (isRunning)
+    */
     fileprivate var propogationControl : cameraDataPropogationControl? // used by extension
     
     
@@ -54,6 +62,22 @@ class RootViewController: UIViewController , cameraDataPipe
     }
 
     
+    override func viewDidLoad()
+    {
+        super.viewDidLoad()
+        // set up the preview and blur
+        self.setupCameraPreview()
+        self.setupBlurAboveCameraPreview()
+        self.setupMainVC()
+        
+        
+        self.view.addSubview(self.blurOverLay)
+    }
+   
+    required init?(coder aDecoder: NSCoder)
+    {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // Add the camera video input layer to the view of the VC
     func setupCameraPreview()
@@ -73,31 +97,46 @@ class RootViewController: UIViewController , cameraDataPipe
         {
                // TO DO : The blur effect is too over powering.
                // After core implementation try to improve this
-              
                self.blurOverLay.frame = self.view.bounds
-            
-               // Add button to control propogation
-               self.propogationControllerButton = UIButton(frame:CGRect(x: self.view.bounds.width/2 - 20 , y: 30, width: 40, height: 40))
-            
-               self.propogationControllerButton?.backgroundColor = UIColor.red
-               self.propogationControllerButton?.layer.cornerRadius = 20 // corner half of button width and height
-            
-               self.propogationControllerButton?.addTarget(self, action: #selector(self.tooglePropogation), for: .touchUpInside)
-            
-               self.blurOverLay.contentView.addSubview(self.propogationControllerButton!)
+               self.blurOverLay.contentView.addSubview(setupPropogationControlButton())
         }
     }
 
+    /*
+        pre : the blueOverLay should be setup. In current setup it means call after setupBlurAboveCameraPreview
+        post : setups the button so that it can now control the propagtion of data through the pipe
+        state change : the button is setup. Propogation control is now possible
+        decs :
+    */
+    func setupPropogationControlButton() ->  UIButton
+    {
+           // Add button to control propogation
+           self.propogationControllerButton = UIButton(frame:CGRect(x: self.view.bounds.width/2 - 20 , y: 30, width: 40, height: 40))
+        
+           self.propogationControllerButton?.backgroundColor = UIColor.red
+           self.propogationControllerButton?.layer.cornerRadius = 20 // corner half of button width and height
+        
+           self.propogationControllerButton?.addTarget(self, action: #selector(self.tooglePropogation), for: .touchUpInside)
+       
+           return self.propogationControllerButton!
+    }
+    
      
-    
-    
+   
+    /*
+        pre : The propogationControlButton has to be setup and this should be added as a target to control flow
+        post : Now the user can stop the propogation of data is they want.
+        state change : sends stop signal to propogationControl , so that no more camera data is fed
+        desc :
+                Never called directly, but called when the button control propogate, changes state
+    */
     func tooglePropogation()
     {
-       guard let propogationControl = self.propogationControl else
+       guard let propogationControl = self.propogationControl else // if the propogationControl is now avalible do nothing
        {
             return
        }
-        
+        // switch prop on/off based on current state
        if (propogationControl.isRunning())
        {
            self.propogationControllerButton?.backgroundColor = UIColor.black
@@ -142,33 +181,20 @@ class RootViewController: UIViewController , cameraDataPipe
         NSLayoutConstraint.activate(constraints)
         
     }
-    
-    override func viewDidLoad()
-    {
-        super.viewDidLoad()
-        // set up the preview and blur
-        self.setupCameraPreview()
-        self.setupBlurAboveCameraPreview()
-        self.setupMainVC()
-        
-        
-        self.view.addSubview(self.blurOverLay)
-    }
    
-    
-    required init?(coder aDecoder: NSCoder)
-    {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
+}
+
+// Act as a pipe for tranmitting the camera buffer data
+extension RootViewController : cameraDataPipe
+{
     func pipePixelBuffer(pixelBuff: CVPixelBuffer)
     {
         self.mainVC.pipePixelBuffer(pixelBuff: pixelBuff)
     }
     
-    
 }
 
+// get access to delegate, through which the propogation of data can be controller
 extension RootViewController : cameraDataPropogationController
 {
     func configurePropogationController(propCon : cameraDataPropogationControl)

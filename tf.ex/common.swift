@@ -21,6 +21,13 @@ open class baseColViewCell : UICollectionViewCell
 
 
 
+public protocol cellProtocol
+{
+    static var cell_identifer : String { get }
+}
+
+
+
 /*
  
     cell provider : The naming is not good enough. 
@@ -29,12 +36,6 @@ open class baseColViewCell : UICollectionViewCell
     So a data source should implement the protocol and the collection view should be registerd ? 
  
  */
-
-public protocol cellProtocol
-{
-    static var cell_identifer : String { get }
-}
-
 class  cellRegistrar
 {
     private var cells : [cellProtocol.Type]
