@@ -44,8 +44,8 @@ class outputCell : UICollectionViewCell
     {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = UIColor.yellow
-        label.backgroundColor = UIColor.blue
+        label.textColor = UIColor.black
+        label.backgroundColor = UIColor.clear
         label.adjustsFontSizeToFitWidth = true
         return label
     }()
@@ -90,7 +90,7 @@ class outputCell : UICollectionViewCell
     
     private func setupViews()
     {
-        self.contentView.backgroundColor = UIColor.clear
+        self.contentView.backgroundColor = UIColor.green
         self.contentView.addSubview(self.label)
         
         let viewMapping : [String : AnyObject] = ["v0" : self.label]
