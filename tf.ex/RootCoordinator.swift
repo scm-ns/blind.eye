@@ -32,7 +32,6 @@ enum CameraSetupResult
 
 
 
-
 final class RootCoordinator : NSObject , cameraDataSource
 {
     // MARK- Private Variables
@@ -43,6 +42,7 @@ final class RootCoordinator : NSObject , cameraDataSource
     private var captureSetupResult : CameraSetupResult
     private let rootVC : UIViewController
     private let window : UIWindow
+    private static let propogationInterval : Double = 2
     
     fileprivate let speechSynth : AVSpeechSynthesizer
     fileprivate var cameraDataPropogationTimer : Timer? = nil // needed in the extension
@@ -184,7 +184,7 @@ final class RootCoordinator : NSObject , cameraDataSource
         DispatchQueue.main.async
         {
             // set up timer which will propogate the data along the chain
-            self.cameraDataPropogationTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(RootCoordinator.shouldPropogate), userInfo: nil, repeats: true)
+            self.cameraDataPropogationTimer = Timer.scheduledTimer(timeInterval: RootCoordinator.propogationInterval, target: self, selector: #selector(RootCoordinator.shouldPropogate), userInfo: nil, repeats: true)
         }
     }
    
