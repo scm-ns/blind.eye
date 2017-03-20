@@ -74,12 +74,12 @@ extension mainDataSource: cameraDataPipe
             if let sink = tranport as? cameraDataSink
             {
                 sink.processPixelBuffer(pixelBuff: pixelBuff)
-                print("Layer  Sink: CameraData Propogation Complete")
+                print("Layer 4: Sink: CameraData Propogation Complete")
             }
             else if let pipe = tranport as? cameraDataPipe
             {
                 pipe.pipePixelBuffer(pixelBuff: pixelBuff)
-                print("Layer  Pipe: Camera Data Propogation Complete")
+                print("Layer 4: Pipe: Camera Data Propogation Complete")
             }
             else
             {

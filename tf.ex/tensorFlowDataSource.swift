@@ -104,7 +104,8 @@ extension tensorFlowDataSource : UICollectionViewDelegate
 {
      // MARK:- Delegate methods to handle touch
 
-    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool
+    {
         return true // select all the different cells
     }
     
@@ -212,7 +213,7 @@ extension tensorFlowDataSource : cameraDataSink
                     self.colView.reloadData()
                     print("analyziz image")
             }
-            print("Layer 3 Sink : Propogation Complete")
+            print("Layer 6 Sink : Propogation Complete")
         }
     }
     

@@ -135,12 +135,12 @@ final class RootCoordinator : NSObject , cameraDataSource
             if let sink = tranport as? cameraDataSink
             {
                 sink.processPixelBuffer(pixelBuff: pixelBuffer)
-                print("Layer 1 Sink: CameraData Propogation Complete")
+                print("Layer 1 Source-Sink: CameraData Propogation Complete")
             }
             else if let pipe = tranport as? cameraDataPipe
             {
                 pipe.pipePixelBuffer(pixelBuff: pixelBuffer)
-                print("Layer 1 Pipe: Camera Data Propogation Complete")
+                print("Layer 1 Source-Pipe: Camera Data Propogation Complete")
             }
             else
             {
