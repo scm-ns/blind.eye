@@ -31,49 +31,9 @@ enum CameraSetupResult
 }
 
 
-/*
-    Camera Image Source 
-    What is the difference between a pipe and a sink
-    A pipe is not the end point.
-    It might do some transformations, but it passes it upwards.
- */
-
-protocol cameraDataTransport // Does nothing. Allows abstraction between the two different types of
-    // transfers
-{
-}
-
-protocol cameraDataSink : cameraDataTransport
-{
-    func processPixelBuffer(pixelBuff : CVPixelBuffer)
-}
-
-protocol cameraDataPipe : cameraDataTransport
-{
-    func pipePixelBuffer(pixelBuff : CVPixelBuffer)
-}
-
-/*
-        delegate used to control whether the camera data is 
- 
-*/
-protocol cameraDataPropogationControl
-{
-    func isRunning() -> Bool
-    func stopPropogation()
-    func restartPropogation() // restart and not start as default behaviour is automatic propogation
-}
-
-/*
-    delegate used to configure the class which will control the propogation
-*/
-protocol cameraDataPropogationController
-{
-    func configurePropogationController(propCon : cameraDataPropogationControl)
-}
 
 
-final class RootCoordinator : NSObject ,AVCaptureVideoDataOutputSampleBufferDelegate
+final class RootCoordinator : NSObject , cameraDataSource
 {
     // MARK- Private Variables
     private let captureSession : AVCaptureSession
@@ -85,8 +45,8 @@ final class RootCoordinator : NSObject ,AVCaptureVideoDataOutputSampleBufferDele
     private let window : UIWindow
     
     fileprivate var cameraDataPropogationTimer : Timer? = nil // needed in the extension
-    private var propogationController : Bool = false
-    private var cameraDataTranports : [cameraDataTransport] = []
+    fileprivate var propogationController : Bool = false
+    var cameraDataTranports : [cameraDataTransport] = []
     
     init(window : UIWindow)
     {
@@ -110,7 +70,7 @@ final class RootCoordinator : NSObject ,AVCaptureVideoDataOutputSampleBufferDele
         
         if let transport = self.rootVC as? cameraDataTransport
         {
-           self.addTransport(transport: transport)
+           self.addCameraTransport(transport: transport)
         }
        
         self.setupPropogationTimer()
@@ -145,6 +105,97 @@ final class RootCoordinator : NSObject ,AVCaptureVideoDataOutputSampleBufferDele
     }
     
     
+    /*
+        pre :
+        post : 
+        state change : 
+        decs : 
+            This function is never called directly, but by the timer which is set to fire repeatedly. 
+            This controls where the data obatined from camera by acting as a delegate for AVCaptureSession, 
+            is propogated. 
+            We do not want to analyze each frame from the camera. This toogles a bool which allows propogation
+            in the did output sample buffer.
+    */
+    func shouldPropogate()
+    {
+        if(self.captureSession.isRunning) // propogate only if camera capturing
+        {
+            self.propogationController = true
+        }
+    }
+    
+    /*
+        The input is fed from the camera output and is passed into various sinks,
+        where the processing of the data is done.
+     */
+    func propogateCameraData(pixelBuffer : CVPixelBuffer)
+    {
+        for  tranport in self.cameraDataTranports
+        {
+            if let sink = tranport as? cameraDataSink
+            {
+                sink.processPixelBuffer(pixelBuff: pixelBuffer)
+                print("Layer 1 Sink: CameraData Propogation Complete")
+            }
+            else if let pipe = tranport as? cameraDataPipe
+            {
+                pipe.pipePixelBuffer(pixelBuff: pixelBuffer)
+                print("Layer 1 Pipe: Camera Data Propogation Complete")
+            }
+            else
+            {
+                print("Layer 1 : Camera Data Propogation Failed")
+            }
+            
+        }
+    }
+   
+    // Root Coordinator can know about the different classes that it holds. I just need to ensure dependency inversion
+    // that is the lower classes should not have to know about the upper classes
+    func addCameraTransport(transport : cameraDataTransport)
+    {
+       self.cameraDataTranports.append(transport)
+    }
+   
+    // This is the initial starting point of the app. From the App Delegate the program moves here
+    // The Root View setup is done here.
+    func execute()
+    {
+        self.window.rootViewController = self.rootVC
+        self.window.makeKeyAndVisible()
+        print("app launched")
+    }
+    
+    
+    func setupPropogationTimer()
+    {
+        // Both the creation and invalidation of the timer will happen in the main thread.
+        // This will meet the requirement that NSTimer has of being created and removed from same thread
+        DispatchQueue.main.async
+        {
+            // set up timer which will propogate the data along the chain
+            self.cameraDataPropogationTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(RootCoordinator.shouldPropogate), userInfo: nil, repeats: true)
+        }
+    }
+   
+    func tearDownPropogationTimer()
+    {
+        guard let timer = self.cameraDataPropogationTimer else
+        {
+           return
+        }
+        
+        DispatchQueue.main.async
+        {
+                timer.invalidate()
+        }
+    }
+    
+    
+    /*
+        Configures the AVCapture session with a few setting like which camera to use. Which format
+        Also sets up a seperate queue for doing the processing
+    */
     func configureCamera()
     {
         if !(self.captureSetupResult == .authorized)
@@ -195,84 +246,6 @@ final class RootCoordinator : NSObject ,AVCaptureVideoDataOutputSampleBufferDele
         
         self.cameraDataPropogationTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.shouldPropogate), userInfo: nil, repeats: true)
     }
- 
-    /*
- 
- 
-    */
-    func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!)
-    {
-            if(self.propogationController)
-            {
-                let pixelBuf : CVPixelBuffer? =  CMSampleBufferGetImageBuffer(sampleBuffer)
-                if let buf = pixelBuf
-                {
-                    DispatchQueue.global(qos: .userInitiated).async
-                    {
-                        self.propogate(pixelBuffer:buf); // May be the prpogation should be done in a different thread?
-                        self.propogationController = false
-                    }
-                    print("get valid camera buffer : \(sampleBuffer != nil)")
-                }
-            }
-    }
-    
-    func shouldPropogate()
-    {
-        if(self.captureSession.isRunning) // propogate only if camera capturing
-        {
-            self.propogationController = true
-        }
-    }
-    /*
-        The input is fed from the camera output and is passed into various sinks,
-        where the processing of the data is done.
-     */
-    func propogate(pixelBuffer : CVPixelBuffer)
-    {
-        for  tranport in self.cameraDataTranports
-        {
-            if let sink = tranport as? cameraDataSink
-            {
-                sink.processPixelBuffer(pixelBuff: pixelBuffer)
-                print("Layer 1 Sink: Propogation Complete")
-            }
-            else if let pipe = tranport as? cameraDataPipe
-            {
-                pipe.pipePixelBuffer(pixelBuff: pixelBuffer)
-                print("Layer 1 Pipe: Propogation Complete")
-            }
-            else
-            {
-                print("Layer 1 : Propogation Failed")
-            }
-            
-        }
-    }
-   
-    // Root Coordinator can know about the different classes that it holds. I just need to ensure dependency inversion
-    // that is the lower classes should not have to know about the upper classes
-    func addTransport(transport : cameraDataTransport)
-    {
-       self.cameraDataTranports.append(transport)
-    }
-   
-    // This is the initial starting point of the app. From the App Delegate the program moves here
-    // The Root View setup is done here.
-    func execute()
-    {
-        self.window.rootViewController = self.rootVC
-        self.window.makeKeyAndVisible()
-        print("app launched")
-    }
-    
-    
-    func setupPropogationTimer()
-    {
-        // set up timer which will propogate the data along the chain
-        self.cameraDataPropogationTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(RootCoordinator.shouldPropogate), userInfo: nil, repeats: true)
-       
-    }
     
 }
 
@@ -289,14 +262,14 @@ extension RootCoordinator : cameraDataPropogationControl
     {
        if (self.cameraDataPropogationTimer?.isValid)!
        {
-            self.cameraDataPropogationTimer?.invalidate() // How to guarantee that the timer is invalidated in the same thread ?
+            self.tearDownPropogationTimer()
        }
        self.cameraDataPropogationTimer = nil
     }
     
     func restartPropogation()
     {
-        guard self.cameraDataPropogationTimer == nil , self.cameraDataPropogationTimer?.isValid == false else // only recreate the timer if previously removed or invalid
+        guard self.cameraDataPropogationTimer == nil , self.cameraDataPropogationTimer?.isValid == nil else // only recreate the timer if previously removed or invalid
         {
            return
         }
@@ -318,3 +291,31 @@ extension RootCoordinator : cameraDataPropogationControl
 }
 
 
+extension RootCoordinator : AVCaptureVideoDataOutputSampleBufferDelegate
+{
+     /*
+            The AVCaptureSession calls this method with each new frame.
+            And we process the frame by passing it to all the pipes and sinks connected to this source
+            
+            But since we do not want to overload the system. We do not process every frame, but only 
+            process a frame when self.propogationController bool is true. This variable change to true state
+            happens when a repeating timer fires.
+     
+    */
+    func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!)
+    {
+            if(self.propogationController)
+            {
+                let pixelBuf : CVPixelBuffer? =  CMSampleBufferGetImageBuffer(sampleBuffer)
+                if let buf = pixelBuf
+                {
+                    DispatchQueue.global(qos: .userInitiated).async
+                    {
+                        self.propogateCameraData(pixelBuffer:buf); // May be the prpogation should be done in a different thread?
+                        self.propogationController = false
+                    }
+                    print("get valid camera buffer : \(sampleBuffer != nil)")
+                }
+            }
+    }
+}
