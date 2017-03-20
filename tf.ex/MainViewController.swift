@@ -32,17 +32,19 @@ class MainVC : UIViewController , cameraDataPipe
         let colView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         colView.translatesAutoresizingMaskIntoConstraints = false
         colView.backgroundColor = UIColor.clear
-        colView.register(tensorFlowCell.self, forCellWithReuseIdentifier: tensorFlowCell.cell_identifer)
+        //colView.register(tensorFlowCell.self, forCellWithReuseIdentifier: tensorFlowCell.cell_identifer)
         return colView
     }()
     
-    private let ds = mainDataSource()
+    private var ds: mainDataSource! = nil
     // MARK -: Initialization
     init()
     {
         super.init(nibName: nil, bundle: nil)
         print(self.view)
         self.view.backgroundColor = UIColor.clear
+        
+        self.ds = mainDataSource(colView: self.mainCollectionView)
         self.mainCollectionView.dataSource = self.ds
         self.mainCollectionView.delegate = self.ds
        
@@ -107,12 +109,15 @@ class mainDataSource: NSObject, UICollectionViewDataSource , UICollectionViewDel
 {
     
     private let cellSource = cellRegistrar()
-    private var cameraDataSinks :[cameraDataPipe] = []
-    override init()
+    private var cameraDataPipes :[cameraDataPipe] = []
+    private let colView : UICollectionView // TODO : Coupling between the data Source and VC. Break them out
+    
+    init(colView : UICollectionView)
     {
+        self.colView = colView
         super.init()
         cellSource.registerCell(cell:tensorFlowCell.self as cellProtocol.Type )
-        
+        cellSource.configColView(colView: colView)
     }
    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -128,7 +133,7 @@ class mainDataSource: NSObject, UICollectionViewDataSource , UICollectionViewDel
     {
         let cell_identifier = cellSource.itemAtIndex(index: indexPath.row).cell_identifer
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cell_identifier,for: indexPath)  as! cameraDataPipe
-        cameraDataSinks.append(cell)
+        cameraDataPipes.append(cell)
         return cell as! UICollectionViewCell
     }
     
@@ -145,10 +150,10 @@ class mainDataSource: NSObject, UICollectionViewDataSource , UICollectionViewDel
     func processPixelBuffer(pixelBuff: CVPixelBuffer)
     {
        // WARNING HACK SOLUTION
-       for sink in cameraDataSinks
+       for pipe in cameraDataPipes
        {
-            sink.pipePixelBuffer(pixelBuff: pixelBuff)
-            print("Layer 2 Sink: Propogation Complete")
+            pipe.pipePixelBuffer(pixelBuff: pixelBuff)
+            print("Layer 2 Pipe : Propogation Complete")
        }
     }
     
