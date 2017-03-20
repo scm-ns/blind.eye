@@ -336,11 +336,13 @@ extension RootCoordinator : soundDataSink
     {
        // The words are going to be kept in a buffer.
        // Periodically data will be read from the buffer
-       print(" SOUND DATA AVALIBALE : \(str)")
+       //print(" SOUND DATA AVALIBALE : \(str)")
         
-       let utter = AVSpeechUtterance(string: str)
-        utter.rate = 0.25
-        utter.pitchMultiplier = 0.25
+       //  It seems they have their own buffer, so things can simply be fed into it.
+        
+        let utter = AVSpeechUtterance(string: str)
+        utter.rate = 0.5
+        utter.pitchMultiplier = 1
         utter.volume = 0.75
         self.speechSynth.speak(utter)
     }
