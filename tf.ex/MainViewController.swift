@@ -22,7 +22,7 @@ import UIKit
 import AVFoundation
 
 
-class MainVC : UIViewController , cameraDataPipe
+class MainVC : UIViewController
 {
  
     private let mainCollectionView : UICollectionView = {
@@ -37,6 +37,9 @@ class MainVC : UIViewController , cameraDataPipe
     }()
     
     private var ds: mainDataSource! = nil
+    
+    var cameraDataTranports: [cameraDataTransport] = [] // cameraDataPipe Protocol
+    
     // MARK -: Initialization
     init()
     {
@@ -47,7 +50,9 @@ class MainVC : UIViewController , cameraDataPipe
         self.ds = mainDataSource(colView: self.mainCollectionView)
         self.mainCollectionView.dataSource = self.ds
         self.mainCollectionView.delegate = self.ds
-       
+        
+        self.addCameraTransport(transport: self.ds as cameraDataTransport)
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -90,71 +95,43 @@ class MainVC : UIViewController , cameraDataPipe
         constraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "H:|-[v0]-|", options: [], metrics: [:], views: viewMapping))
         NSLayoutConstraint.activate(constraints)
     }
-   
-   // cameraDataPipe
+    
+}
+
+
+// Act as a pipe for tranmitting the camera buffer data
+extension MainVC: cameraDataPipe
+{
     func pipePixelBuffer(pixelBuff: CVPixelBuffer)
     {
-       self.ds.processPixelBuffer(pixelBuff: pixelBuff)
-        print("Layer 2 Pipe : Propogation Complete")
-    }
-    
-}
 
-// Holds the different sections, where each of the them will be a collection view
-// Register cells
-// the mainDataSource is just a container. It has ntohgint to load.
-// It will just hold the different sections, correponding to the different types of sections
-// with cells in them.
-class mainDataSource: NSObject, UICollectionViewDataSource , UICollectionViewDelegateFlowLayout , cameraDataSink
-{
-    
-    private let cellSource = cellRegistrar()
-    private var cameraDataPipes :[cameraDataPipe] = []
-    private let colView : UICollectionView // TODO : Coupling between the data Source and VC. Break them out
-    
-    init(colView : UICollectionView)
-    {
-        self.colView = colView
-        super.init()
-        cellSource.registerCell(cell:tensorFlowCell.self as cellProtocol.Type )
-        cellSource.configColView(colView: colView)
+        for  tranport in self.cameraDataTranports
+        {
+            if let sink = tranport as? cameraDataSink
+            {
+                sink.processPixelBuffer(pixelBuff: pixelBuff)
+                print("Layer  Sink: CameraData Propogation Complete")
+            }
+            else if let pipe = tranport as? cameraDataPipe
+            {
+                pipe.pipePixelBuffer(pixelBuff: pixelBuff)
+                print("Layer  Pipe: Camera Data Propogation Complete")
+            }
+            else
+            {
+                print("Layer 4 : Camera Data Propogation Failed")
+            }
+            
+        }
+
     }
    
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1; 
-    }
-
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
+    func addCameraTransport(transport: cameraDataTransport)
     {
-        return cellSource.numberOfCellTypes();
+       self.cameraDataTranports.append(transport)
     }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
-    {
-        let cell_identifier = cellSource.itemAtIndex(index: indexPath.row).cell_identifer
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cell_identifier,for: indexPath)  as! cameraDataPipe
-        cameraDataPipes.append(cell)
-        return cell as! UICollectionViewCell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
-    {
-            return CGSize(width: (collectionView.bounds.width), height: 200)
-    }
-   
-    // This is slighty more complex than a pipe, as it does some distribution to different types of cells
-    // Do I keep an array of cells. How to handle this ?
-    // Do I keep view models for the cells which will be passed these items ?
-    // How to pass data to the cells ?
-    
-    func processPixelBuffer(pixelBuff: CVPixelBuffer)
-    {
-       // WARNING HACK SOLUTION
-       for pipe in cameraDataPipes
-       {
-            pipe.pipePixelBuffer(pixelBuff: pixelBuff)
-            print("Layer 2 Pipe : Propogation Complete")
-       }
-    }
-    
 }
+
+
+
+

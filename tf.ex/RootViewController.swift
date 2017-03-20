@@ -53,7 +53,8 @@ class RootViewController: UIViewController
         Gives us a option to control the flow through ( start and stop ) and query the state (isRunning)
     */
     fileprivate var propogationControl : cameraDataPropogationControl? // used by extension
-    
+  
+    var cameraDataTranports: [cameraDataTransport] = [] // cameraDataPipe Protocol
     
     init(cameraImageLayer : AVCaptureVideoPreviewLayer )
     {
@@ -61,7 +62,7 @@ class RootViewController: UIViewController
        super.init(nibName: nil, bundle: nil)
     }
 
-    
+   
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -69,7 +70,8 @@ class RootViewController: UIViewController
         self.setupCameraPreview()
         self.setupBlurAboveCameraPreview()
         self.setupMainVC()
-        
+       
+        self.addCameraTransport(transport: self.mainVC as cameraDataTransport)
         
         self.view.addSubview(self.blurOverLay)
     }
@@ -189,9 +191,32 @@ extension RootViewController : cameraDataPipe
 {
     func pipePixelBuffer(pixelBuff: CVPixelBuffer)
     {
-        self.mainVC.pipePixelBuffer(pixelBuff: pixelBuff)
+
+        for  tranport in self.cameraDataTranports
+        {
+            if let sink = tranport as? cameraDataSink
+            {
+                sink.processPixelBuffer(pixelBuff: pixelBuff)
+                print("Layer 2 Sink: CameraData Propogation Complete")
+            }
+            else if let pipe = tranport as? cameraDataPipe
+            {
+                pipe.pipePixelBuffer(pixelBuff: pixelBuff)
+                print("Layer 2 Pipe: Camera Data Propogation Complete")
+            }
+            else
+            {
+                print("Layer 2 : Camera Data Propogation Failed")
+            }
+            
+        }
+
     }
-    
+   
+    func addCameraTransport(transport: cameraDataTransport)
+    {
+       self.cameraDataTranports.append(transport)
+    }
 }
 
 // get access to delegate, through which the propogation of data can be controller

@@ -67,12 +67,12 @@ class tensorFlowDataSource : NSObject ,soundDataSource
             if let sink = transport as? soundDataSink
             {
                     sink.processSound(str: str)
-                    print("Layer 1 Sink: Sound Propogation Complete")
+                    print("Layer 1 Source - Sink: Sound Propogation Complete")
             }
             else if let pipe = transport as? soundDataPipe
             {
                     pipe.pipeSound(str: str)
-                    print("Layer 1 Pipe: Sound Propogation Complete")
+                    print("Layer 1 Source - Pipe: Sound Propogation Complete")
             }
             else
             {
@@ -83,7 +83,7 @@ class tensorFlowDataSource : NSObject ,soundDataSource
    
     func addSoundTransport(transport: soundDataTransport)
     {
-        soundDataTransports.append(soundDataCarrier)
+        soundDataTransports.append(transport)
     }
     
 }

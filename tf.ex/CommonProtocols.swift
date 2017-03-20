@@ -25,6 +25,8 @@ protocol cameraDataSink : cameraDataTransport
 protocol cameraDataPipe : cameraDataTransport
 {
     func pipePixelBuffer(pixelBuff : CVPixelBuffer) // Move from using the pixel buffer into something less constraied. 
+    func addCameraTransport(transport : cameraDataTransport)
+    var cameraDataTranports : [cameraDataTransport] {get set}
 }
 
 protocol cameraDataSource : cameraDataTransport
@@ -83,6 +85,7 @@ protocol soundDataPipe : soundDataTransport
 {
     func pipeSound(str : String)
 }
+
 
 protocol soundDataSource // extend the source to support multiple sinks/pipes
 {

@@ -10,7 +10,7 @@ import UIKit
 import AVFoundation
 
 // Holds a collection view inside it, which shows the results of the inception network running
-class tensorFlowCell : UICollectionViewCell , cellProtocol , cameraDataPipe
+class tensorFlowCell : UICollectionViewCell , cellProtocol
 {
     static var cell_identifer: String = "tensorFlowCell"
     
@@ -25,16 +25,28 @@ class tensorFlowCell : UICollectionViewCell , cellProtocol , cameraDataPipe
         return colView
     }()
   
-    private var ds : tensorFlowDataSource?
+    fileprivate var ds : tensorFlowDataSource!
+   
+    fileprivate var soundTransport : soundDataTransport? = nil
     
+    var cameraDataTranports: [cameraDataTransport] = [] // cameraDataPipe Protocol
+   
     override init(frame: CGRect)
     {
        super.init(frame: frame)
         
        setupViews()
-       ds = tensorFlowDataSource(collectionView: self.collectionView) // double retention cycle. 
+       ds = tensorFlowDataSource(collectionView: self.collectionView , soundDataCarrier: self as soundDataPipe) // double retention cycle.
+      
+       addCameraTransport(transport: self.ds as cameraDataTransport)
+        
        self.collectionView.dataSource = ds
        self.collectionView.delegate = ds
+    }
+   
+    func setTransport(transport : soundDataTransport)
+    {
+        self.soundTransport = transport
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -74,14 +86,66 @@ class tensorFlowCell : UICollectionViewCell , cellProtocol , cameraDataPipe
         
         
     }
-    
+   
+}
+
+// Act as a pipe for tranmitting the camera buffer data
+extension tensorFlowCell : cameraDataPipe
+{
     func pipePixelBuffer(pixelBuff: CVPixelBuffer)
     {
-        self.ds?.processPixelBuffer(pixelBuff: pixelBuff)
-        print("Layer 3 Pipe : Propogation Complete")
+
+        for  tranport in self.cameraDataTranports
+        {
+            if let sink = tranport as? cameraDataSink
+            {
+                sink.processPixelBuffer(pixelBuff: pixelBuff)
+                print("Layer  Sink: CameraData Propogation Complete")
+            }
+            else if let pipe = tranport as? cameraDataPipe
+            {
+                pipe.pipePixelBuffer(pixelBuff: pixelBuff)
+                print("Layer  Pipe: Camera Data Propogation Complete")
+            }
+            else
+            {
+                print("Layer 4 : Camera Data Propogation Failed")
+            }
+            
+        }
+
     }
-    
+   
+    func addCameraTransport(transport: cameraDataTransport)
+    {
+       self.cameraDataTranports.append(transport)
+    }
 }
 
 
-
+extension tensorFlowCell : soundDataPipe
+{
+    func pipeSound(str : String)
+    {
+        guard let transport = self.soundTransport else
+        {
+           return
+        }
+       
+        if let sink = transport as? soundDataSink
+        {
+           sink.processSound(str: str)
+           print("Layer 1 Sink : Sound Propogation Complete")
+        }
+        else if let pipe = transport as? soundDataPipe
+        {
+            pipe.pipeSound(str: str)
+            print("Layer 1 Pipe : Sound Propogation Complete")
+        }
+        else
+        {
+            
+            print("Layer 1 : Sound Propogation Failed")
+        }
+    }
+}
