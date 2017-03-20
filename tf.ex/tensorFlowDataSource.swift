@@ -207,7 +207,7 @@ extension tensorFlowDataSource : cameraDataSink
  
     func processPixelBuffer(pixelBuff: CVPixelBuffer)
     {
-        DispatchQueue.global(qos: .background).async
+        DispatchQueue.global(qos: .userInitiated).async
         {
             self.ds.runCNN(onFrame: pixelBuff)
             DispatchQueue.main.async

@@ -16,7 +16,7 @@ class tensorFlowCell : UICollectionViewCell , cellProtocol
     
     let collectionView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
+        layout.scrollDirection = .vertical
         // resize using autolayout
         let colView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         colView.translatesAutoresizingMaskIntoConstraints = false
