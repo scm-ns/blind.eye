@@ -35,5 +35,76 @@ class faceDetectorCell : UICollectionViewCell , cellProtocol , cameraData
     }
 }
 
+class faceDetectorDataSource : NSObject
+{
+    fileprivate let ds : faceDetectorDataSource// Face detector details
+    fileprivate let colView : UICollectionViewCell // used for registering the cells
+    
+   
+    init(collectionView : UICollectionView)
+    {
+            ds = faceDetectorDataSource()
+            colView = collectionView
+            super.init()
+        
+    }
+    
+    
+}
+
+extension faceDetectorDataSource : UICollectionViewDelegateFlowLayout
+{
+    
+    
+}
+
+
+extension faceDetectorDataSource : UICollectionViewDelegate
+{
+    
+}
+
+extension faceDetectorDataSource : UICollectionViewDataSource
+{
+  
+    func numberOfSections(in collectionView: UICollectionView) -> Int
+    {
+        return 1;
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        numberOfItemsInSection section: Int) -> Int
+    
+    
+    
+    
+    
+    
+    
+    
+    
+}
+
+
+
+
+extension faceDetectorDataSource: cameraDataSink
+{
+ 
+    func processPixelBuffer(pixelBuff: CVPixelBuffer)
+    {
+        DispatchQueue.global(qos: .userInitiated).async
+        {
+            //self.ds.runCNN(onFrame: pixelBuff) // Find the faces
+            DispatchQueue.main.async
+            {
+                    self.colView.reloadData()
+                    print("analyziz image")
+            }
+            print("Layer 6 Sink : Propogation Complete")
+        }
+    }
+    
+}
 
 
