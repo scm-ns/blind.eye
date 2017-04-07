@@ -19,6 +19,10 @@ import CoreImage
     It is GPU data, but I am locking it and keeping it in the CPU.
     But since I am not writing to it, I should be able to use it from multiple threads.
  
+    Relation between the cell and the data source. 
+    Only the cell will know of the data source. 
+    So the cell will act as pipe and will be passed in data which will be given to the data source
+ 
  */
 class faceDetectorCell : UICollectionViewCell , cellProtocol , cameraData
 {
@@ -32,4 +36,4 @@ class faceDetectorCell : UICollectionViewCell , cellProtocol , cameraData
 }
 
 
-class faceDetectorDataSource : 
+
