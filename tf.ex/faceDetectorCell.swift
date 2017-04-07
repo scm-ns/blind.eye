@@ -14,7 +14,6 @@ import CoreImage
     This class takes in the camera data in the form of the pixel buffer and does 
     face recognition of the pixel buffer 
  
- 
     How to share the pixel buffer between multiple consumers ?
  
     It is GPU data, but I am locking it and keeping it in the CPU.
@@ -31,3 +30,6 @@ class faceDetectorCell : UICollectionViewCell , cellProtocol , cameraData
         
     }
 }
+
+
+class faceDetectorDataSource : 

@@ -19,6 +19,22 @@
             Coordinator -> MainVC -> ColView -> One of the cell
  
             Is there a better system. There might be but this is a pretty interesting system.
+        
+            How does the data flow happen
+                
+            RootCoor(source/sink)  -> RootVC(pipe)
+                                        |
+                                
+                                    MainVC (pipe)
+                                        |
+                                    MainDS (pipe)   ->     CellTypes  (pipes)
+                                                                 |
+                                                           CellDS    (sink/source)
+
+           The data path for the camera and sound data is different. 
+            For the camera, the data flows from the RootCoor  (source) to the leaf nodes of the tree(sink)
+ 
+            For the sound, the data flows from the lead nodes (source) of the tree to the RootCoor(sink)
  
  */
 
@@ -32,7 +48,7 @@ enum CameraSetupResult
 
 
 
-final class RootCoordinator : NSObject , cameraDataSource
+final class RootCoordinator : NSObject
 {
     // MARK- Private Variables
     private let captureSession : AVCaptureSession
@@ -132,41 +148,9 @@ final class RootCoordinator : NSObject , cameraDataSource
         {
             self.propogationController = true
         }
+    
     }
     
-    /*
-        The input is fed from the camera output and is passed into various sinks,
-        where the processing of the data is done.
-     */
-    func propogateCameraData(pixelBuffer : CVPixelBuffer)
-    {
-        for  tranport in self.cameraDataTranports
-        {
-            if let sink = tranport as? cameraDataSink
-            {
-                sink.processPixelBuffer(pixelBuff: pixelBuffer)
-                print("Layer 1 Source-Sink: CameraData Propogation Complete")
-            }
-            else if let pipe = tranport as? cameraDataPipe
-            {
-                pipe.pipePixelBuffer(pixelBuff: pixelBuffer)
-                print("Layer 1 Source-Pipe: Camera Data Propogation Complete")
-            }
-            else
-            {
-                print("Layer 1 : Camera Data Propogation Failed")
-            }
-            
-        }
-    }
-   
-    // Root Coordinator can know about the different classes that it holds. I just need to ensure dependency inversion
-    // that is the lower classes should not have to know about the upper classes
-    func addCameraTransport(transport : cameraDataTransport)
-    {
-       self.cameraDataTranports.append(transport)
-    }
-   
     // This is the initial starting point of the app. From the App Delegate the program moves here
     // The Root View setup is done here.
     func execute()
@@ -345,6 +329,44 @@ extension RootCoordinator : soundDataSink
         utter.pitchMultiplier = 1
         utter.volume = 0.75
         self.speechSynth.speak(utter)
+    }
+}
+
+
+extension RootCoordinator : cameraDataSource
+{
+    
+    /*
+        The input is fed from the camera output and is passed into various sinks,
+        where the processing of the data is done.
+     */
+    func propogateCameraData(pixelBuffer : CVPixelBuffer)
+    {
+        for  tranport in self.cameraDataTranports
+        {
+            if let sink = tranport as? cameraDataSink
+            {
+                sink.processPixelBuffer(pixelBuff: pixelBuffer)
+                print("Layer 1 Source-Sink: CameraData Propogation Complete")
+            }
+            else if let pipe = tranport as? cameraDataPipe
+            {
+                pipe.pipePixelBuffer(pixelBuff: pixelBuffer)
+                print("Layer 1 Source-Pipe: Camera Data Propogation Complete")
+            }
+            else
+            {
+                print("Layer 1 : Camera Data Propogation Failed")
+            }
+            
+        }
+    }
+   
+    // Root Coordinator can know about the different classes that it holds. I just need to ensure dependency inversion
+    // that is the lower classes should not have to know about the upper classes
+    func addCameraTransport(transport : cameraDataTransport)
+    {
+       self.cameraDataTranports.append(transport)
     }
 }
 
