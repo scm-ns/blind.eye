@@ -30,7 +30,7 @@ class tensorFlowDataSource : NSObject
     // The best way to do this , is by using a reference ot the vc and called reload of it when the data has been laoded
     
     fileprivate let ds : PredictionDataSource
-    fileprivate let colView : UICollectionView
+    fileprivate let colView : UICollectionView // This has to be be a weak reference
  
     // cache for storing the view models and for selecting items.
     fileprivate var cache : [String : outputCellViewModel]
@@ -46,7 +46,11 @@ class tensorFlowDataSource : NSObject
        /// The Protocol should have a 
                         /// basic analyze completion handler.
                         /// Standard Data Source methods for predictions etc
+        // This is thight coupling. Is there any way to loosen this?
+        // May be using DIP
         ds  = PredictionDataSource() // Load the data source
+        
+        
         colView = collectionView
         cache = [:]
         soundDataTransports = []
