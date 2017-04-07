@@ -105,7 +105,7 @@ std::vector<std::string> labels;
         The buffer is located on the GPU side.
  
  */
-// Runs Dp on the machine
+// Runs Dp on the machine // This is a syncronize call without any dispatch
 - (void)runCNNOnFrame:(CVPixelBufferRef)pixelBuffer // We are acting directly on the buffer. Is there a better way here. 
 {
     assert(pixelBuffer != NULL);
