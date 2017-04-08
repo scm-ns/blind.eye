@@ -21,6 +21,10 @@ class tensorFlowCell : UICollectionViewCell , cellProtocol
         let colView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         colView.translatesAutoresizingMaskIntoConstraints = false
         colView.backgroundColor = UIColor.clear
+       
+        // move the reigstration into the data source. 
+        // I want to supress the information about the cells to 
+        // the data source
         colView.register(outputCell.self, forCellWithReuseIdentifier: outputCell.cell_identifier)
         return colView
     }()
