@@ -8,6 +8,20 @@
 
 import UIKit
 
+/*
+    Basic idea of the cell is that it will pass the pixel data to the faceDetector,
+    which will process and find the faces and return is back as an array. 
+ 
+    Then after this array has been set after the proceess of the image has been done, 
+    the collectionView will be reloaded.
+    When this colView will call is delegate methods I will pass the faces back to the col view,
+    wrapped in a col view cell
+    
+ 
+ 
+ */
+
+
 class faceDetectorDataSource : NSObject
 {
     fileprivate let colView : UICollectionView // used for registering the cells
