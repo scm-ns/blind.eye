@@ -1,10 +1,23 @@
 Used to keep track of what has been done and what is to be done.
 
-March 6th, 2017
+April 14th : 2017
+	- Work on better UI
+	- Work on adding right button 
 
+currnt : 
+	create new super cell for showing the faces
+	add the cell to the collectoin view 
+	make the faces show up in a cell 	
+work queue : 
+	create up button for showing details about tensorlfow
+	create top-left button for showing menu
+	make the cell rounded for cell showing		
 
-Micro plans
-
+desgin questions : 
+	why is the view controller used to transport data. Show the VC be segregated to handling views alone.
+			but it is a view controller, does that not mean that it can be used to control data flow ? 	
+	
+Micro plans : 
 	Create better UI
 	Retain network using AWS. No use simpler network for first release later work on improvement
 
