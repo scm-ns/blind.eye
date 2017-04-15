@@ -34,18 +34,19 @@ class faceDetectorCell : UICollectionViewCell , cellProtocol
         layout.scrollDirection = .vertical
         
         let colView = UICollectionView(frame: CGRect.zero , collectionViewLayout: layout)
-        colView.translatesAutoresizinbMaskIntoContrsints = false
+        colView.translatesAutoresizingMaskIntoConstraints = false
         
         return colView
-    }
+    }()
     
     var cameraDataTranports: [cameraDataTransport] = [] // cameraDataPipe Protocol
   
     override init(frame: CGRect)
     {
+        ds = faceDetectorDataSource(collectionView : collectionView)
+        
         super.init(frame: frame);
         
-        ds = faceDetectorDataSource(collectionView : collectionView)
         
         self.collectionView.dataSource = ds
         self.collectionView.delegate = ds
@@ -68,6 +69,25 @@ extension faceDetectorCell : cameraDataPipe
         // Do I really need another seperation. Yes, More modularity. This data source is acting both as a piping
         // system and also as a data soruce for collection view. // I can break it down even more
         
+        // TODO : Tech Debt : This fucntion is repeated everywhere. Implement it in the protocol iteself as a mixin ? // default extension
+        for  tranport in self.cameraDataTranports
+        {
+            if let sink = tranport as? cameraDataSink
+            {
+                sink.processPixelBuffer(pixelBuff: pixelBuff)
+                print("Layer 5 Sink: CameraData Propogation Complete")
+            }
+            else if let pipe = tranport as? cameraDataPipe
+            {
+                pipe.pipePixelBuffer(pixelBuff: pixelBuff)
+                print("Layer 5 Pipe: Camera Data Propogation Complete")
+            }
+            else
+            {
+                print("Layer 5 : Camera Data Propogation Failed")
+            }
+         
+        }
     }
     
     func addCameraTransport(transport: cameraDataTransport)
