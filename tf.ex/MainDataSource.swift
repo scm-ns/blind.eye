@@ -26,12 +26,21 @@ class mainDataSource: NSObject, UICollectionViewDataSource , UICollectionViewDel
     {
         self.colView = colView
         super.init()
+        
         // remove this tight binding. 
         // Pass in as a parameter ? Then the Main VC will know about.
         // I want to suppress the knowldege of the cell types within the data source and not expose 
         // it to the VC
+       
+        // This will add the cell type to a cell source.
+        // The cell source will register this cell with its indetifier according to the cellProtocol protocol
         cellSource.registerCell(cell:tensorFlowCell.self as cellProtocol.Type )
+        cellSource.registerCell(cell: faceDetectorCell.self as cellProtocol.Type)
+
+
+        
         cellSource.configColView(colView: colView)
+        
         self.addSoundTransport(transport: soundDataCarrier)
     }
    

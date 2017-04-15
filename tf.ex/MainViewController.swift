@@ -24,15 +24,15 @@ import AVFoundation
 
 class MainVC : UIViewController
 {
- 
+    
     private let mainCollectionView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         // resize using autolayout
         let colView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         colView.translatesAutoresizingMaskIntoConstraints = false
+        // the cell registrations are handled with in the data source
         colView.backgroundColor = UIColor.clear
-        //colView.register(tensorFlowCell.self, forCellWithReuseIdentifier: tensorFlowCell.cell_identifer)
         return colView
     }()
     
