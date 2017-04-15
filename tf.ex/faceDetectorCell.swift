@@ -45,11 +45,14 @@ class faceDetectorCell : UICollectionViewCell , cellProtocol
     {
         ds = faceDetectorDataSource(collectionView : collectionView)
         
-        super.init(frame: frame);
         
+        super.init(frame: frame);
         
         self.collectionView.dataSource = ds
         self.collectionView.delegate = ds
+        
+        // add the data source to the data pipeline
+        self.addCameraTransport(transport: ds)
     }
     
    
