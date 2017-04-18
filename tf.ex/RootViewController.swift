@@ -57,7 +57,9 @@ class RootViewController: UIViewController
         Gives us a option to control the flow through ( start and stop ) and query the state (isRunning)
     */
     fileprivate var propogationControl : cameraDataPropogationControl? // used by extension
-  
+    fileprivate var soundControl : soundControl?
+    
+    
     var cameraDataTranports: [cameraDataTransport] = [] // cameraDataPipe Protocol
     var soundDataTransports: [soundDataTransport] = [] // soundPipe Protocol
     
@@ -300,6 +302,14 @@ extension RootViewController : soundDataPipe
     }
 }
 
+// get access to delegate, through which the text 2 speech system can be controlled
+extension RootViewController : soundController
+{
+    func configureSoundController(soundCon: soundControl)
+    {
+        self.soundControl = soundCon
+    }
+}
 
 
 // get access to delegate, through which the propogation of data can be controller
@@ -310,3 +320,6 @@ extension RootViewController : cameraDataPropogationController
         self.propogationControl = propCon
     }
 }
+
+ 
+
