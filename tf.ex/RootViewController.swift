@@ -98,7 +98,6 @@ class RootViewController: UIViewController
     // add blue effect on top of the camera view
     func setupBlurAboveCameraPreview()
     {
-        
         if !UIAccessibilityIsReduceTransparencyEnabled()
         {
                // TO DO : The blur effect is too over powering.
@@ -108,14 +107,32 @@ class RootViewController: UIViewController
         }
     }
 
+   
+    func setupVoiceControlButton() -> UIButton
+    {
+        
+       return UIButton()
+    }
+    
+    
+    func setupButtonArrowButton()
+    {
+        
+    }
+    
+    
+    
     /*
         pre : the blueOverLay should be setup. In current setup it means call after setupBlurAboveCameraPreview
         post : setups the button so that it can now control the propagtion of data through the pipe
         state change : the button is setup. Propogation control is now possible
         decs :
     */
-    func setupPropogationControlButton() ->  UIButton
+    func createPropogationControlButton() ->  UIButton
     {
+            //TO DO : 
+            // Add animations to the button so that button goes from being a red circle to a red square
+        
            // Add button to control propogation
            self.propogationControllerButton = UIButton(frame:CGRect(x: self.view.bounds.width/2 - 20 , y: 30, width: 40, height: 40))
         
