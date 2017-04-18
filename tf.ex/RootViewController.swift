@@ -124,17 +124,15 @@ class RootViewController: UIViewController
         self.speechControlButton = UIButton(frame: CGRect(x: (self.view.bounds.width * 2.0/3) - 20 , y: 30, width: 40, height: 40))
             // on highlight / selected we move from speaker -> mute
         self.speechControlButton?.setImage(UIImage(named : "speaker"), for: .normal)
-        self.speechControlButton?.setImage(UIImage(named : "mute"), for: .selected)
+        self.speechControlButton?.setImage(UIImage(named : "mute"), for: .selected) // selected state is mute
         
         self.speechControlButton?.addTarget(self, action: #selector(self.toogleSpeechToText), for: .touchUpInside)
         
         return self.speechControlButton! 
     }
-    
-    
  
     /*
-        pre : funtion added as target to speaker control button
+        pre : funtion added as target to speaker control button. Setup the speech control button or failure
         post : toogle the feature of saying the items recognized
         state change : toogle speech 2 text feature
         decs :  not called directly
@@ -142,6 +140,16 @@ class RootViewController: UIViewController
     */
     func toogleSpeechToText()
     {
+       if (self.speechControlButton?.isSelected)! // speech muted state , switch to allow state
+       {
+            self.soundControl?.allowSound()
+            self.speechControlButton?.isSelected = false // does this switch the images ??
+       }
+       else  // speech allowed state , switch to mute state
+       {
+            self.soundControl?.stopSound()
+            self.speechControlButton?.isSelected = true
+       }
         
     }
    
