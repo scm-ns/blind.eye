@@ -38,8 +38,7 @@ protocol cameraDataSource : cameraDataTransport
 
 
 /*
-        delegate used to control whether the camera data is 
- 
+        delegate used to control whether the camera data is  being propogated
 */
 protocol cameraDataPropogationControl
 {
@@ -54,6 +53,18 @@ protocol cameraDataPropogationControl
 protocol cameraDataPropogationController
 {
     func configurePropogationController(propCon : cameraDataPropogationControl)
+}
+
+// Delegate and setup for controlling the text 2 speech feature
+protocol soundControl
+{
+    func stopSound()
+    func allowSound()
+}
+
+protocol  soundController
+{
+    func configureSoundController(soundCon : soundControl)
 }
 
 
