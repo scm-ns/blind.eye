@@ -50,7 +50,7 @@ protocol cameraDataPropogationControl
 /*
     delegate used to configure the class which will control the propogation
 */
-protocol cameraDataPropogationController
+protocol cameraDataPropogationControlConfigurator
 {
     func configurePropogationController(propCon : cameraDataPropogationControl)
 }
@@ -62,7 +62,7 @@ protocol soundControl
     func allowSound()
 }
 
-protocol  soundController
+protocol  soundControlConfigurator
 {
     func configureSoundController(soundCon : soundControl)
 }
