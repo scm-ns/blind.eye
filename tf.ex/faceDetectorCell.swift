@@ -26,7 +26,7 @@ import CoreImage
  */
 class faceDetectorCell : UICollectionViewCell , cellProtocol 
 {
-    static var cell_identifer : String = "faceDetectorCell"
+    static var cell_identifier : String = "faceDetectorCell"
     fileprivate let ds : faceDetectorDataSource// Face detector details
    
     let collectionView : UICollectionView = {

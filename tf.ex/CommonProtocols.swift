@@ -112,7 +112,7 @@ open class baseColViewCell : UICollectionViewCell
 
 public protocol cellProtocol
 {
-    static var cell_identifer : String { get }
+    static var cell_identifier : String { get }
 }
 
 
@@ -143,7 +143,7 @@ class  cellRegistrar
         cells.map
         {
             (cell) in
-            colView.register(cell.self as! UICollectionViewCell.Type, forCellWithReuseIdentifier: cell.cell_identifer)
+            colView.register(cell.self as! UICollectionViewCell.Type, forCellWithReuseIdentifier: cell.cell_identifier)
             
         }
     }

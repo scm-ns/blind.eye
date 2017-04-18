@@ -12,7 +12,7 @@ import AVFoundation
 // Holds a collection view inside it, which shows the results of the inception network running
 class tensorFlowCell : UICollectionViewCell , cellProtocol
 {
-    static var cell_identifer: String = "tensorFlowCell"
+    static var cell_identifier: String = "tensorFlowCell"
     
     let collectionView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()

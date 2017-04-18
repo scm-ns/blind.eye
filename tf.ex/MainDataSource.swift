@@ -55,7 +55,7 @@ class mainDataSource: NSObject, UICollectionViewDataSource , UICollectionViewDel
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
     {
-        let cell_identifier = cellSource.itemAtIndex(index: indexPath.row).cell_identifer
+        let cell_identifier = cellSource.itemAtIndex(index: indexPath.row).cell_identifier
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cell_identifier,for: indexPath)
         
         if let cell_cam = cell as?  cameraDataPipe
