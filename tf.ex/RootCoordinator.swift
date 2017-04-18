@@ -8,10 +8,8 @@
 
 // This class will be in charge : 
     // 1 getting camera input and feeding it into different sinks
-    // 2 showing the different types ov View Controller
-    // 3 UI Element to show that Camera is still recording
-    // 4 Left Top Options menu
-
+    // 2 opening a channel to speech system and converting the identified items into speech
+    // 3 Show a rootVC which will show the UI of the app
 
 /*
     How to pass the data up ?
@@ -58,11 +56,16 @@ final class RootCoordinator : NSObject
     private var captureSetupResult : CameraSetupResult
     private let rootVC : UIViewController
     private let window : UIWindow
+   
+    // How frequent the camera data is piped into the detectors for
+    // processing the input
     private static let propogationInterval : Double = 2
     
     fileprivate let speechSynth : AVSpeechSynthesizer
     fileprivate var cameraDataPropogationTimer : Timer? = nil // needed in the extension
-    fileprivate var propogationController : Bool = false
+    
+    fileprivate var imagePropogationController : Bool = false // whether to propogate the image up the chain
+    
     var cameraDataTranports : [cameraDataTransport] = []
     
     init(window : UIWindow)
@@ -146,7 +149,7 @@ final class RootCoordinator : NSObject
     {
         if(self.captureSession.isRunning) // propogate only if camera capturing
         {
-            self.propogationController = true
+            self.imagePropogationController = true
         }
     
     }
@@ -281,8 +284,10 @@ extension RootCoordinator : cameraDataPropogationControl
             return false
         }
     }
-    
 }
+
+
+
 
 
 extension RootCoordinator : AVCaptureVideoDataOutputSampleBufferDelegate
@@ -298,7 +303,7 @@ extension RootCoordinator : AVCaptureVideoDataOutputSampleBufferDelegate
     */
     func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!)
     {
-            if(self.propogationController)
+            if(self.imagePropogationController)
             {
                 let pixelBuf : CVPixelBuffer? =  CMSampleBufferGetImageBuffer(sampleBuffer)
                 if let buf = pixelBuf
@@ -306,7 +311,7 @@ extension RootCoordinator : AVCaptureVideoDataOutputSampleBufferDelegate
                     DispatchQueue.global(qos: .userInitiated).async
                     {
                         self.propogateCameraData(pixelBuffer:buf); // May be the prpogation should be done in a different thread?
-                        self.propogationController = false
+                        self.imagePropogationController = false
                     }
                     print("get valid camera buffer : \(sampleBuffer != nil)")
                 }
