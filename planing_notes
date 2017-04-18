@@ -1,6 +1,6 @@
 Used to keep track of what has been done and what is to be done.
 
-April 14th : 2017
+
 	- Work on better UI
 	- Work on adding right button 
 
@@ -22,9 +22,17 @@ Micro plans :
 	Retain network using AWS. No use simpler network for first release later work on improvement
 
 Plans : 
-	Release app to app store : March 12th, 2017
-	Martch 19th, 2017  : The app is almost complete. I need to work on improving the
-	accuracy this week and try other techniques. 
-
-
+	Release app before end of this week. Without many of the importatn features. 
+	Release that as updates. Have something in the app store to show people. 
+	v0.0.1 features : 
+		- Identify 150 home items 	
+		- Capacity to speak the items that you see
+	
+	feature set : 
+		- Capacity to indentify more items
+		- able to send request out to the server and do processing there. 
+		- run multiple models not just a single model.
+		- identify the distance to an object
+		- push notifications for new models and other updates
+		
 
