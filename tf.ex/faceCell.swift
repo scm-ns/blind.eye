@@ -18,9 +18,9 @@ class faceCellViewModel
 }
 
 
-class faceCell : UICollectionViewCell
+class faceCell : UICollectionViewCell , cellProtocol
 {
-    static let cell_identifier = "face_cell"
+    static var cell_identifier = "face_cell"
     
     public var viewModel : faceCellViewModel?
     {
