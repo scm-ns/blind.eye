@@ -38,7 +38,11 @@ class RootViewController: UIViewController
     private let cameraPreviewLayer : AVCaptureVideoPreviewLayer
     private var cameraPreviewView : UIView? = nil
     fileprivate let mainVC: MainVC = MainVC()
-    private var propogationControllerButton: UIButton? = nil
+    private var propogationControllerButton: UIButton? = nil // image propogation
+    
+    // Button to control the state of whether we speak out the identified items
+    private var speechControlButton : UIButton? = nil
+   
     private lazy var blurOverLay : UIVisualEffectView =
     {
         let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.light)
@@ -46,7 +50,7 @@ class RootViewController: UIViewController
         blurView.autoresizingMask = [.flexibleWidth , .flexibleHeight]
         return blurView
     }()
-    
+   
     /*
         The feeding of data through the pipe is controlled by this 
         delegate.
@@ -103,23 +107,42 @@ class RootViewController: UIViewController
                // TO DO : The blur effect is too over powering.
                // After core implementation try to improve this
                self.blurOverLay.frame = self.view.bounds
-               self.blurOverLay.contentView.addSubview(setupPropogationControlButton())
+            
+                // add the propogation control button
+               self.blurOverLay.contentView.addSubview(createPropogationControlButton())
+            
+                // add the text to voice control button
+               self.blurOverLay.contentView.addSubview(createVoiceControlButton())
         }
     }
 
    
-    func setupVoiceControlButton() -> UIButton
+    func createVoiceControlButton() -> UIButton
     {
+        self.speechControlButton = UIButton(frame: CGRect(x: (self.view.bounds.width * 2.0/3) - 20 , y: 30, width: 40, height: 40))
+            // on highlight / selected we move from speaker -> mute
+        self.speechControlButton?.setImage(UIImage(named : "speaker"), for: .normal)
+        self.speechControlButton?.setImage(UIImage(named : "mute"), for: .selected)
         
-       return UIButton()
+        self.speechControlButton?.addTarget(self, action: #selector(self.toogleSpeechToText), for: .touchUpInside)
+        
+        return self.speechControlButton! 
     }
     
     
-    func setupButtonArrowButton()
+ 
+    /*
+        pre : funtion added as target to speaker control button
+        post : toogle the feature of saying the items recognized
+        state change : toogle speech 2 text feature
+        decs :  not called directly
+ 
+    */
+    func toogleSpeechToText()
     {
         
     }
-    
+   
     
     
     /*
@@ -134,7 +157,7 @@ class RootViewController: UIViewController
             // Add animations to the button so that button goes from being a red circle to a red square
         
            // Add button to control propogation
-           self.propogationControllerButton = UIButton(frame:CGRect(x: self.view.bounds.width/2 - 20 , y: 30, width: 40, height: 40))
+           self.propogationControllerButton = UIButton(frame:CGRect(x: self.view.bounds.width/3 - 20 , y: 30, width: 40, height: 40))
         
            self.propogationControllerButton?.backgroundColor = UIColor.red
            self.propogationControllerButton?.layer.cornerRadius = 20 // corner half of button width and height
@@ -171,6 +194,12 @@ class RootViewController: UIViewController
             propogationControl.restartPropogation()
        }
     }
+    
+    func createButtonArrowButton()
+    {
+       
+    }
+  
     
     
     func setupMainVC()
