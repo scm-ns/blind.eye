@@ -63,9 +63,12 @@ final class RootCoordinator : NSObject
     
     fileprivate let speechSynth : AVSpeechSynthesizer
     fileprivate var cameraDataPropogationTimer : Timer? = nil // needed in the extension
+   
+    // Unless user specifies propogate the image and convert identified labels to text
+    fileprivate var imagePropogationController : Bool = true// whether to propogate the image up the chain
+    fileprivate var soundController : Bool = true// whether  to convert the indentified labels into speech
     
-    fileprivate var imagePropogationController : Bool = false // whether to propogate the image up the chain
-    
+        
     var cameraDataTranports : [cameraDataTransport] = []
     
     init(window : UIWindow)
@@ -286,6 +289,19 @@ extension RootCoordinator : cameraDataPropogationControl
     }
 }
 
+extension RootCoordinator : soundControl
+{
+    func stopSound()
+    {
+        self.soundController = false
+    }
+    
+    func allowSound()
+    {
+        self.soundController = true
+    }
+}
+
 
 
 
@@ -326,8 +342,9 @@ extension RootCoordinator : soundDataSink
        // The words are going to be kept in a buffer.
        // Periodically data will be read from the buffer
        //print(" SOUND DATA AVALIBALE : \(str)")
+        guard soundController else {return}
         
-       //  It seems they have their own buffer, so things can simply be fed into it.
+        //  It seems they have their own buffer, so things can simply be fed into it.
         
         let utter = AVSpeechUtterance(string: str)
         utter.rate = 0.5
