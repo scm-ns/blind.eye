@@ -89,9 +89,14 @@ final class RootCoordinator : NSObject
         
         super.init()
         
-        if let controller = self.rootVC as? cameraDataPropogationController
+        if let controller = self.rootVC as? cameraDataPropogationControlConfigurator
         {
            controller.configurePropogationController(propCon: self)
+        }
+        
+        if let controller = self.rootVC as? soundControlConfigurator
+        {
+            controller.configureSoundController(soundCon: self)
         }
         
         if let cam_transport = self.rootVC as? cameraDataTransport
