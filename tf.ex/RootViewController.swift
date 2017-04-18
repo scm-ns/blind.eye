@@ -311,7 +311,7 @@ extension RootViewController : soundDataPipe
 }
 
 // get access to delegate, through which the text 2 speech system can be controlled
-extension RootViewController : soundController
+extension RootViewController : soundControlConfigurator
 {
     func configureSoundController(soundCon: soundControl)
     {
@@ -321,7 +321,7 @@ extension RootViewController : soundController
 
 
 // get access to delegate, through which the propogation of data can be controller
-extension RootViewController : cameraDataPropogationController
+extension RootViewController : cameraDataPropogationControlConfigurator
 {
     func configurePropogationController(propCon : cameraDataPropogationControl)
     {
