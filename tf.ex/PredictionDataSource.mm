@@ -19,7 +19,7 @@
 
 
 // Model details
-static NSString* model_file_name = @"tensorflow_inception_graph";
+static NSString* model_file_name = @"output_graph";
 static NSString* model_file_type = @"pb";
 
 // This controls whether we'll be loading a plain GraphDef proto, or a
@@ -30,7 +30,7 @@ const bool model_uses_memory_mapping = false;
 
 
 // If you have your own model, point this to the labels file.
-static NSString* labels_file_name = @"imagenet_comp_graph_label_strings";
+static NSString* labels_file_name = @"output_labels";
 static NSString* labels_file_type = @"txt";
 
 // These dimensions need to match those the model was trained with.
