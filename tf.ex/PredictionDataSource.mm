@@ -19,7 +19,7 @@
 
 
 // Model details
-static NSString* model_file_name = @"output_graph";
+static NSString* model_file_name = @"output_graph_strip";
 static NSString* model_file_type = @"pb";
 
 // This controls whether we'll be loading a plain GraphDef proto, or a
@@ -33,14 +33,16 @@ const bool model_uses_memory_mapping = false;
 static NSString* labels_file_name = @"output_labels";
 static NSString* labels_file_type = @"txt";
 
+//As per : https://github.com/tensorflow/tensorflow/issues/2883
+
 // These dimensions need to match those the model was trained with.
-const int wanted_input_width = 224;
-const int wanted_input_height = 224;
+const int wanted_input_width = 229;
+const int wanted_input_height = 229;
 const int wanted_input_channels = 3;
-const float input_mean = 117.0f;
-const float input_std = 1.0f;
-const std::string input_layer_name = "input";
-const std::string output_layer_name = "softmax1";
+const float input_mean = 128.0f;
+const float input_std = 128.0f;
+const std::string input_layer_name = "Mul";
+const std::string output_layer_name = "final_result";
 
 
 @interface PredictionDataSource(internalMethods)
