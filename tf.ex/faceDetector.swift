@@ -60,8 +60,9 @@ extension faceDetector
         }
         
         // Get the face bounds for the faces in the image
-        let detectorOpt = [CIDetectorImageOrientation : ciImage.properties[kCGImagePropertyOrientation as String]];
-        let features = faceDectectionEngine.features(in: ciImage, options: detectorOpt)
+        //let detectorOpt = [CIDetectorImageOrientation : ciImage.properties[kCGImagePropertyOrientation as String]];
+        
+        let features = faceDectectionEngine.features(in: ciImage)
        
         // TODO : Is there a more efficient way to do this ?
         
