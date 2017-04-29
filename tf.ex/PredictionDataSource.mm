@@ -26,7 +26,7 @@ static NSString* model_file_type = @"pb";
 // file created by the convert_graphdef_memmapped_format utility that wraps a
 // GraphDef and parameter file that can be mapped into memory from file to
 // reduce overall memory usage.
-const bool model_uses_memory_mapping = false;
+const bool model_uses_memory_mapping = true;
 
 
 // If you have your own model, point this to the labels file.
