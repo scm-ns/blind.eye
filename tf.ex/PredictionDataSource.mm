@@ -7,8 +7,7 @@
 
 #import "PredictionDataSource.h"
 
-// Based on Google's Code
-
+// Based on Google's Code [ Actually copied from Google's Code from the tensforflow ios example ]
 #include <sys/time.h>
 #import <memory>
 
