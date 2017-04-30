@@ -19,7 +19,7 @@
 
 
 // Model details
-static NSString* model_file_name = @"output_graph_strip";
+static NSString* model_file_name = @"output_graph_strip_mem";
 static NSString* model_file_type = @"pb";
 
 // This controls whether we'll be loading a plain GraphDef proto, or a
